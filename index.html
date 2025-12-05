@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Porter - AI-Native Accounting Software</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    body::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(ellipse 80% 50% at 50% 50%, #1a1a2e 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .container {
+      position: relative;
+      z-index: 1;
+      padding: 40px;
+    }
+    h1 {
+      font-size: clamp(72px, 14vw, 160px);
+      font-weight: 700;
+      letter-spacing: -6px;
+      margin-bottom: 32px;
+      background: linear-gradient(180deg, #ffffff 0%, #888888 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeIn 1.2s ease;
+    }
+    .tagline {
+      font-size: clamp(18px, 3vw, 28px);
+      color: #a1a1a1;
+      max-width: 700px;
+      margin: 0 auto 20px;
+      animation: fadeIn 1s ease 0.2s both;
+    }
+    .sub {
+      font-size: 17px;
+      color: #666;
+      animation: fadeIn 1s ease 0.4s both;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+</html>
