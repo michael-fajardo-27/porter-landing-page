@@ -1,0 +1,16 @@
+<svg width="360" height="120" viewBox="0 0 360 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Transparent background -->
+
+  <!-- Three overlapping circles - grayscale progression -->
+  <circle cx="55" cy="60" r="28" fill="#4A4A4A"/>
+  <circle cx="80" cy="60" r="28" fill="#787878"/>
+  <circle cx="105" cy="60" r="28" fill="#FFFFFF"/>
+
+  <!-- Porter wordmark (moved closer) -->
+  <text x="145" y="72"
+        font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        font-size="42"
+        font-weight="500"
+        letter-spacing="-1"
+        fill="#FFFFFF">Porter</text>
+</svg>
