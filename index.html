@@ -4,1052 +4,1408 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Porter | AI-Native Accounting for Growing Businesses</title>
-  <meta name="description" content="Porter replaces your bookkeeper with intelligent automation. Accurate books, clear financials, and numbers you can actually trust. Built for founders, not accountants.">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <meta name="description" content="Porter is your AI financial copilot. We close your books, explain your numbers, generate reports with real insights, and answer any question about your financial data.">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     button, input, select, textarea, optgroup {
       font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: inherit; line-height: inherit; color: inherit;
     }
-
     :root {
-      --bg: #FFFFFF;
-      --bg-sub: #FAFAFA;
-      --bg-tint: #F8F8F8;
-      --text: #0A0A0A;
-      --text-sec: #525252;
-      --text-muted: #9A9A9A;
+      --bg: #FAFAFA;
+      --white: #FFFFFF;
+      --black: #0A0A0A;
+      --text2: #525252;
+      --muted: #9A9A9A;
       --border: #E5E5E5;
       --border-sub: #F0F0F0;
+      --tint: #F8F8F8;
       --green: #2D6A4F;
       --green-bg: rgba(45,106,79,0.08);
-      --black: #0A0A0A;
+      --red: #DC2626;
+      --amber: #92400E;
+      --sidebar: #111111;
     }
-
     html { scroll-behavior: smooth; }
-
     body {
       font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background: var(--white);
+      color: var(--black);
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
 
+    /* ── FONTS ── */
+    .f-serif { font-family: 'Instrument Serif', Georgia, serif; }
+    .f-mono { font-family: 'DM Mono', 'SF Mono', monospace; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+    @keyframes slideR { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+
+    .anim-target {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .anim-target.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     /* ── NAV ── */
     nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 12px 32px;
       background: rgba(255,255,255,0.92);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border-sub);
-    }
-    .nav-inner {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 0 32px;
-      height: 56px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
     }
-    .nav-logo {
-      height: 55px;
-      width: auto;
+    .nav-logo { height: 50px; width: auto; }
+    .nav-right { display: flex; gap: 28px; align-items: center; margin-left: auto; }
+    .nav-right a { font-size: 13px; color: var(--text2); text-decoration: none; cursor: pointer; transition: color 0.15s; }
+    .nav-right a:hover { color: var(--black); }
+    .nav-right a.nav-cta-btn { color: #fff; }
+    .nav-right a.nav-cta-btn:hover { color: #fff; }
+    .nav-cta-btn {
+      font-size: 12px; font-weight: 500; padding: 8px 18px; border-radius: 6px;
+      background: var(--black); color: #fff; border: none; cursor: pointer;
+      text-decoration: none; display: inline-block; transition: background 0.15s;
     }
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      list-style: none;
+    .nav-cta-btn:hover { background: #262626; }
+
+    /* ── PILL ── */
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 100;
+      margin-bottom: 20;
     }
-    .nav-links a {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-sec);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-    .nav-links a:hover { color: var(--text); }
-    .nav-cta {
-      background: var(--black);
-      color: #fff !important;
-      padding: 8px 18px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 500;
-      text-decoration: none;
-      transition: background 0.15s;
-      display: inline-block;
-    }
-    .nav-cta:hover { background: #262626; }
+    .pill-green { background: var(--green-bg); }
+    .pill-green .pill-dot { background: var(--green); }
+    .pill-green .pill-text { color: var(--green); }
+    .pill-border { border: 1px solid var(--border); background: var(--white); }
+    .pill-border .pill-dot { background: var(--green); animation: pulse 2s ease infinite; }
+    .pill-border .pill-text { color: var(--text2); }
+    .pill-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .pill-text { font-size: 11px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; }
+
+    /* ── SECTION HEAD ── */
+    .s-head { text-align: center; max-width: 660px; margin: 0 auto 56px; }
+    .s-head h2 { font-family: 'Instrument Serif', Georgia, serif; font-size: 42px; font-weight: 400; color: var(--black); line-height: 1.12; margin-bottom: 14px; }
+    .s-head p { font-size: 15px; color: var(--text2); line-height: 1.6; }
 
     /* ── HERO ── */
     .hero {
-      padding: 140px 32px 80px;
+      padding: 80px 32px 64px;
+      background: var(--white);
       text-align: center;
-      max-width: 1120px;
-      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
     }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 5px 14px 5px 8px;
-      background: var(--bg-tint);
-      border: 1px solid var(--border);
-      border-radius: 9999px;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-sec);
-      margin-bottom: 32px;
+    .hero-dot-grid {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(var(--border) 1px, transparent 1px);
+      background-size: 32px 32px;
+      opacity: 0.3;
     }
-    .hero-badge-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--green);
-    }
+    .hero-content { position: relative; z-index: 1; }
     .hero h1 {
       font-family: 'Instrument Serif', Georgia, serif;
-      font-size: clamp(40px, 6vw, 72px);
-      font-weight: 400;
-      line-height: 1.08;
-      letter-spacing: -0.02em;
-      color: var(--text);
-      max-width: 780px;
-      margin: 0 auto 24px;
+      font-size: 58px; font-weight: 400; color: var(--black);
+      line-height: 1.08; max-width: 740px; margin: 0 auto 22px;
     }
-    .hero p {
-      font-size: 17px;
-      color: var(--text-sec);
-      max-width: 560px;
-      margin: 0 auto 40px;
-      line-height: 1.6;
+    .hero p.hero-sub {
+      font-size: 16px; color: var(--text2); line-height: 1.65;
+      max-width: 580px; margin: 0 auto 36px;
     }
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      margin-bottom: 12px;
+    .hero-actions { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; }
+    .hero-note { font-size: 12px; color: var(--muted); }
+    .hero-stats {
+      display: flex; gap: 48px; justify-content: center;
+      max-width: 600px; margin: 40px auto 0;
     }
-    .btn-primary {
-      background: var(--black);
-      color: #fff;
-      padding: 12px 28px;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 500;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: background 0.15s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+    .hero-stat { text-align: center; }
+    .hero-stat-val { font-family: 'Instrument Serif', Georgia, serif; font-size: 30px; color: var(--black); }
+    .hero-stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 2px; }
+    .btn-dark {
+      font-size: 13px; font-weight: 500; padding: 14px 28px; border-radius: 8px;
+      background: var(--black); color: #fff; border: none; cursor: pointer;
+      text-decoration: none; display: inline-block; transition: background 0.15s;
     }
-    .btn-primary:hover { background: #262626; }
-    .btn-secondary {
-      background: transparent;
-      color: var(--text);
-      padding: 12px 28px;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 500;
-      text-decoration: none;
-      border: 1px solid var(--border);
-      cursor: pointer;
-      transition: all 0.15s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+    .btn-dark:hover { background: #262626; }
+    .btn-outline {
+      font-size: 13px; font-weight: 500; padding: 14px 28px; border-radius: 8px;
+      background: var(--white); color: var(--black); border: 1px solid var(--border);
+      cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.15s;
     }
-    .btn-secondary:hover {
-      background: var(--bg-tint);
-      border-color: #D4D4D4;
-    }
-    .hero-subtext {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 12px;
-    }
+    .btn-outline:hover { background: var(--tint); border-color: #D4D4D4; }
 
-    /* ── PRODUCT SCREENSHOT ── */
-    .product-shot {
-      max-width: 1120px;
-      margin: 0 auto 0;
-      padding: 0 32px;
-    }
-    .product-shot-inner {
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06);
-    }
-    .product-shot img {
-      width: 100%;
-      display: block;
-    }
-
-    /* ── SECTION SHARED ── */
-    section {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 100px 32px;
-    }
-    .section-label {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-    .section-heading {
-      font-family: 'Instrument Serif', Georgia, serif;
-      font-size: clamp(28px, 4vw, 40px);
-      font-weight: 400;
-      line-height: 1.15;
-      letter-spacing: -0.01em;
-      color: var(--text);
-      max-width: 560px;
-      margin-bottom: 16px;
-    }
-    .section-desc {
-      font-size: 15px;
-      color: var(--text-sec);
-      max-width: 480px;
-      line-height: 1.6;
-      margin-bottom: 48px;
-    }
-
-    /* ── PAIN SECTION ── */
+    /* ── PAIN POINTS ── */
     .pain-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border-sub);
-      border: 1px solid var(--border-sub);
-      border-radius: 10px;
-      overflow: hidden;
+      max-width: 920px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
     }
     .pain-card {
-      background: var(--bg);
-      padding: 32px;
+      padding: 28px; border-radius: 12px; border: 1px solid var(--border);
+      background: var(--white);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .pain-card:hover {
-      background: var(--bg-sub);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     }
-    .pain-number {
+    .pain-card .frustration {
       font-family: 'Instrument Serif', Georgia, serif;
-      font-size: 24px;
-      font-weight: 400;
-      color: var(--border);
-      margin-bottom: 12px;
-      line-height: 1;
+      font-size: 22px; font-style: italic; color: var(--black);
+      margin-bottom: 14px; line-height: 1.3;
+      padding-bottom: 14px; border-bottom: 1px solid var(--border-sub);
     }
-    .pain-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 8px;
+    .pain-card .before {
+      font-size: 12.5px; color: var(--muted); line-height: 1.55;
+      margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border-sub);
     }
-    .pain-desc {
-      font-size: 13px;
-      color: var(--text-sec);
-      line-height: 1.55;
-    }
+    .pain-card .before strong { font-weight: 500; color: var(--text2); }
+    .pain-card .after { font-size: 12.5px; color: var(--green); line-height: 1.55; border-left: 3px solid var(--green); padding-left: 12px; }
+    .pain-card .after strong { font-weight: 600; }
 
-    /* ── HOW IT WORKS ── */
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 48px;
-      margin-top: 48px;
+    /* ── TWO PATHS ── */
+    .paths-grid {
+      max-width: 920px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
     }
-    .step-number {
+    .path-card {
+      padding: 32px 28px; border-radius: 12px; background: var(--white);
+      border: 1px solid var(--border); display: flex; flex-direction: column;
+    }
+    .path-tag {
+      font-size: 10px; font-weight: 500; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 10px;
+    }
+    .path-card h3 {
       font-family: 'Instrument Serif', Georgia, serif;
-      font-size: 40px;
-      font-weight: 400;
-      color: var(--border);
-      margin-bottom: 16px;
-      line-height: 1;
+      font-size: 26px; font-weight: 400; color: var(--black); margin-bottom: 10px;
     }
-    .step h3 {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 8px;
+    .path-card > p { font-size: 13.5px; color: var(--text2); line-height: 1.55; margin-bottom: 20px; }
+    .path-features { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; flex: 1; }
+    .path-cta-area { margin-top: auto; }
+    .path-feature {
+      display: flex; gap: 9px; align-items: flex-start;
+      font-size: 13px; color: var(--black); line-height: 1.45;
     }
-    .step p {
-      font-size: 13px;
-      color: var(--text-sec);
-      line-height: 1.6;
-    }
+    .path-feature svg { flex-shrink: 0; margin-top: 1px; }
+    .path-note { font-size: 11px; color: var(--muted); margin-top: 10px; text-align: center; font-style: italic; }
 
-    /* ── FEATURES ── */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1px;
-      background: var(--border-sub);
-      border: 1px solid var(--border-sub);
-      border-radius: 10px;
-      overflow: hidden;
+    /* ── APP FRAME ── */
+    .app-frame {
+      max-width: 920px; margin: 0 auto; border-radius: 12px;
+      border: 1px solid var(--border); overflow: hidden; background: var(--white);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 40px rgba(0,0,0,0.06);
     }
-    .feature-card {
-      background: var(--bg);
-      padding: 40px;
-      transition: background 0.15s;
+    .app-frame-inner { display: flex; height: 540px; }
+    .app-sidebar {
+      width: 192px; background: var(--sidebar); padding: 18px 0;
+      flex-shrink: 0; display: flex; flex-direction: column;
     }
-    .feature-card:hover {
-      background: var(--bg-sub);
+    .sidebar-logo { padding: 0 14px 18px; display: flex; align-items: center; gap: 7px; }
+    .sidebar-logo-icon {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: linear-gradient(135deg, #2D6A4F, #1a4a35);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 14px; font-weight: 700;
     }
-    .feature-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      background: var(--bg-tint);
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-      font-size: 16px;
+    .sidebar-logo span { font-size: 15px; font-weight: 600; color: #fff; }
+    .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 1px; padding: 0 7px; }
+    .sidebar-item {
+      padding: 7px 10px; border-radius: 5px; font-size: 12px;
+      color: rgba(255,255,255,0.45); font-weight: 400;
     }
-    .feature-card h3 {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 8px;
+    .sidebar-item.active { background: rgba(255,255,255,0.1); color: #fff; font-weight: 500; }
+    .sidebar-bottom { padding: 0 7px; }
+    .sidebar-user {
+      padding: 10px 14px; border-top: 1px solid rgba(255,255,255,0.06);
+      margin-top: 6px; display: flex; align-items: center; gap: 7px;
     }
-    .feature-card p {
-      font-size: 13px;
-      color: var(--text-sec);
-      line-height: 1.6;
+    .sidebar-user-avatar {
+      width: 20px; height: 20px; border-radius: 5px;
+      background: rgba(255,255,255,0.12); display: flex;
+      align-items: center; justify-content: center;
+      font-size: 9px; color: #fff; font-weight: 500;
     }
+    .sidebar-user span { font-size: 11px; color: rgba(255,255,255,0.45); }
+    .app-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .app-topbar {
+      padding: 9px 18px; border-bottom: 1px solid var(--border-sub);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .app-topbar-title { font-size: 13px; font-weight: 500; color: var(--black); }
+    .app-topbar-badge {
+      font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 3px;
+      border: 1px solid var(--border); color: var(--text2);
+    }
+    .app-content { flex: 1; overflow: hidden; }
 
-    /* ── PRODUCT SHOWCASE ── */
-    .showcase {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 100px 32px;
-      border-top: 1px solid var(--border-sub);
-    }
-    .showcase-item {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 64px;
-      align-items: center;
-      margin-bottom: 80px;
-    }
-    .showcase-item:last-child { margin-bottom: 0; }
-    .showcase-item.reverse { direction: rtl; }
-    .showcase-item.reverse > * { direction: ltr; }
-    .showcase-text { }
-    .showcase-text .section-label { margin-bottom: 10px; }
-    .showcase-text h3 {
-      font-family: 'Instrument Serif', Georgia, serif;
-      font-size: 28px;
-      font-weight: 400;
-      line-height: 1.2;
-      color: var(--text);
-      margin-bottom: 12px;
-    }
-    .showcase-text p {
-      font-size: 14px;
-      color: var(--text-sec);
-      line-height: 1.6;
-    }
-    .showcase-img {
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 6px 24px rgba(0,0,0,0.05);
-    }
-    .showcase-img img {
-      width: 100%;
-      display: block;
-    }
-    @media (max-width: 768px) {
-      .showcase-item { grid-template-columns: 1fr; gap: 32px; }
-      .showcase-item.reverse { direction: ltr; }
-    }
-
-    /* ── COMPARE ── */
-    .compare-table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      font-size: 13px;
-    }
-    .compare-table thead th {
-      background: var(--bg-tint);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--text-sec);
-      padding: 12px 24px;
-      text-align: left;
-      border-bottom: 1px solid var(--border-sub);
-    }
-    .compare-table thead th:not(:first-child) {
-      text-align: center;
-    }
-    .compare-table tbody td {
-      padding: 14px 24px;
-      border-bottom: 1px solid var(--border-sub);
-      color: var(--text);
-      font-size: 13px;
-    }
-    .compare-table tbody td:not(:first-child) {
-      text-align: center;
-    }
-    .compare-table tbody tr:last-child td {
-      border-bottom: none;
-    }
-    .compare-table tbody tr:hover {
-      background: var(--bg-sub);
-    }
-    .compare-table .check {
-      color: var(--green);
-      font-weight: 600;
-    }
-    .compare-table .dash {
-      color: var(--text-muted);
-    }
-    .compare-highlight {
-      background: rgba(45,106,79,0.03);
-    }
-
-    /* ── GUARANTEE / PROMISE ── */
-    .promise {
-      text-align: center;
-      padding: 80px 32px;
-      border-top: 1px solid var(--border-sub);
-      border-bottom: 1px solid var(--border-sub);
-      background: var(--bg-sub);
-    }
-    .promise-heading {
-      font-family: 'Instrument Serif', Georgia, serif;
-      font-size: clamp(22px, 3vw, 32px);
-      font-weight: 400;
-      line-height: 1.35;
-      color: var(--text);
-      max-width: 640px;
-      margin: 0 auto 16px;
-    }
-    .promise p {
-      font-size: 15px;
-      color: var(--text-sec);
-      max-width: 520px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
-    /* ── INDUSTRIES ── */
-    .industry-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 32px;
-    }
-    .industry-tag {
-      padding: 7px 16px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-sec);
-      background: var(--bg);
-      transition: all 0.15s;
-    }
-    .industry-tag:hover {
-      background: var(--bg-tint);
-      border-color: #D4D4D4;
-      color: var(--text);
-    }
-
-    /* ── CTA BAND ── */
-    .cta-band {
-      text-align: center;
-      padding: 100px 32px;
-      max-width: 1120px;
-      margin: 0 auto;
-    }
-    .cta-band h2 {
-      font-family: 'Instrument Serif', Georgia, serif;
-      font-size: clamp(28px, 4vw, 44px);
-      font-weight: 400;
-      line-height: 1.15;
-      color: var(--text);
-      margin-bottom: 16px;
-    }
-    .cta-band p {
-      font-size: 15px;
-      color: var(--text-sec);
-      margin-bottom: 32px;
-      max-width: 480px;
+    /* ── CHAT UI ── */
+    .chat-area { padding: 20px 24px; height: 100%; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+    .user-bubble {
+      align-self: flex-end; max-width: 68%;
+      padding: 12px 16px; border-radius: 16px 16px 4px 16px;
+      background: var(--black); color: #fff; font-size: 13px; line-height: 1.5;
       margin-left: auto;
-      margin-right: auto;
-      line-height: 1.6;
     }
+    .ai-block {
+      align-self: flex-start; max-width: 88%;
+      display: flex; flex-direction: column; gap: 10px;
+      margin-right: auto;
+    }
+    .ai-block .ai-avatar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+    .ai-block .ai-avatar {
+      width: 20px; height: 20px; border-radius: 5px;
+      background: linear-gradient(135deg, #2D6A4F, #1a4a35);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 10px; font-weight: 700; flex-shrink: 0;
+    }
+    .ai-block .ai-label { font-size: 11px; font-weight: 500; color: var(--muted); }
+    .tool-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tool-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 10px; border-radius: 5px; background: var(--tint);
+      border: 1px solid var(--border-sub); white-space: nowrap;
+    }
+    .tool-chip-icon {
+      width: 14px; height: 14px; border-radius: 3px; background: var(--white);
+      border: 1px solid var(--border); display: flex;
+      align-items: center; justify-content: center; font-size: 7px; flex-shrink: 0;
+    }
+    .tool-chip-name { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text2); }
+    .tool-chip-check { color: var(--green); flex-shrink: 0; }
+    .ai-cta {
+      padding: 12px 16px; border-radius: 8px; background: var(--green-bg);
+      border: 1px solid rgba(45,106,79,0.12);
+      font-size: 12.5px; color: var(--green); line-height: 1.55;
+    }
+    .ai-response {
+      font-size: 13px; color: var(--black); line-height: 1.6;
+      padding: 12px 16px; background: var(--tint); border-radius: 8px;
+      border: 1px solid var(--border-sub);
+    }
+
+    /* ── BADGES ── */
+    .badge {
+      font-size: 10px; font-weight: 500; padding: 3px 8px; border-radius: 3px;
+      text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap;
+    }
+    .badge-green { color: var(--green); background: var(--green-bg); }
+    .badge-posted { color: #fff; background: var(--green); }
+    .badge-amber { color: var(--amber); background: rgba(146,64,14,0.08); }
+    .badge-gray { color: var(--muted); background: #F5F5F5; }
+    .badge-red { color: var(--red); background: rgba(220,38,38,0.08); }
+
+    /* ── DATA TABLE (inside app frames) ── */
+    .data-table { border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
+    .data-table-head {
+      display: grid; padding: 7px 14px; background: var(--tint);
+      border-bottom: 1px solid var(--border-sub);
+    }
+    .data-table-head span {
+      font-size: 9.5px; font-weight: 500; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .data-table-row {
+      display: grid; padding: 9px 14px;
+      border-bottom: 1px solid var(--border-sub);
+    }
+    .data-table-row:last-child { border-bottom: none; }
+
+    /* ── TASK LIST ── */
+    .task-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 7px; border: 1px solid var(--border-sub);
+      background: var(--white);
+    }
+    .task-check {
+      width: 16px; height: 16px; border-radius: 3px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .task-check.done { background: var(--green); }
+    .task-check.undone { border: 1.5px solid var(--border); }
+    .task-name { font-size: 11.5px; color: var(--black); flex: 1; }
+    .task-name.done { color: var(--muted); text-decoration: line-through; }
+    .task-ai-tag {
+      font-size: 9px; font-weight: 500; padding: 2px 6px; border-radius: 3px;
+      background: var(--green-bg); color: var(--green); white-space: nowrap;
+    }
+
+    /* ── TABS (inside app frames) ── */
+    .app-tabs {
+      display: flex; gap: 16px; padding: 10px 16px;
+      border-bottom: 1px solid var(--border-sub);
+    }
+    .app-tab {
+      font-size: 12px; padding-bottom: 3px; color: var(--muted); font-weight: 400;
+    }
+    .app-tab.active { color: var(--black); font-weight: 500; border-bottom: 2px solid var(--black); }
+    .app-sub-tabs {
+      display: flex; gap: 4px; padding: 8px 16px;
+      border-bottom: 1px solid var(--border-sub); overflow-x: auto;
+    }
+    .app-sub-tab {
+      font-size: 11px; padding: 4px 10px; border-radius: 5px; white-space: nowrap;
+    }
+    .app-sub-tab.active { background: var(--black); color: #fff; }
+    .app-sub-tab:not(.active) { color: var(--text2); }
+
+    /* ── COMPARISON ── */
+    .compare-grid {
+      max-width: 740px; margin: 0 auto; border-radius: 12px;
+      border: 1px solid var(--border); overflow: hidden; background: var(--white);
+    }
+    .compare-head {
+      display: grid; grid-template-columns: 1.2fr 1fr 1fr 0.8fr;
+      padding: 10px 18px; background: var(--tint); border-bottom: 1px solid var(--border-sub);
+    }
+    .compare-head span {
+      font-size: 10px; font-weight: 500; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.04em; text-align: center;
+    }
+    .compare-head span:nth-child(2) { color: var(--green); font-weight: 600; }
+    .compare-row {
+      display: grid; grid-template-columns: 1.2fr 1fr 1fr 0.8fr;
+      padding: 11px 18px; border-bottom: 1px solid var(--border-sub);
+    }
+    .compare-row:nth-child(odd) { background: var(--white); }
+    .compare-row:nth-child(even) { background: #FAFAFA; }
+    .compare-row:last-child { border-bottom: none; }
+    .compare-row span:first-child { font-size: 12px; color: var(--black); }
+    .compare-row .porter-val { font-size: 12px; font-weight: 600; color: var(--green); text-align: center; background: rgba(45,106,79,0.04); border-radius: 4px; padding: 2px 6px; margin: -2px 0; }
+    .compare-row .other-val { font-size: 11.5px; color: var(--muted); text-align: center; }
+
+    /* ── CTA ── */
+    .cta-section { padding: 100px 32px; background: var(--bg); text-align: center; }
+    .cta-section h2 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 42px; color: var(--black); margin-bottom: 14px; font-weight: 400;
+    }
+    .cta-section > p { font-size: 15px; color: var(--text2); max-width: 480px; margin: 0 auto 36px; line-height: 1.6; }
+    .cta-buttons { display: flex; gap: 12px; justify-content: center; margin-bottom: 12px; }
+    .cta-note { font-size: 12px; color: var(--muted); }
 
     /* ── FOOTER ── */
     footer {
-      border-top: 1px solid var(--border-sub);
-      padding: 40px 32px;
-      max-width: 1120px;
-      margin: 0 auto;
+      padding: 24px 32px; border-top: 1px solid var(--border-sub);
+      display: flex; justify-content: space-between; align-items: center;
     }
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .footer-left {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-    .footer-logo {
-      height: 45px;
-      width: auto;
-      opacity: 0.5;
-    }
-    .footer-copy {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-    .footer-links {
-      display: flex;
-      gap: 24px;
-      list-style: none;
-    }
-    .footer-links a {
-      font-size: 12px;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-    .footer-links a:hover { color: var(--text); }
+    .footer-copy { font-size: 12px; color: var(--muted); }
+    .footer-links { display: flex; gap: 20px; list-style: none; }
+    .footer-links a { font-size: 12px; color: var(--muted); text-decoration: none; transition: color 0.15s; }
+    .footer-links a:hover { color: var(--black); }
 
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* ── SECTION WRAPPERS ── */
+    .section-white { padding: 100px 32px; background: var(--white); }
+    .section-gray { padding: 100px 32px; background: var(--bg); }
+
+    /* ── RECON VARIANCE TABLE ── */
+    .variance-row-red { background: rgba(220,38,38,0.03); }
+
+    /* ── DASHBOARD ── */
+    .dash-chart-bar { border-radius: 2px 2px 0 0; transition: height 0.4s cubic-bezier(0.16,1,0.3,1); }
+    .ar-bar { height: 100%; transition: width 0.4s cubic-bezier(0.16,1,0.3,1); }
+
+    /* ── CLOSE SCREEN ── */
+    .close-progress-bar { height: 5px; border-radius: 3px; background: var(--border-sub); overflow: hidden; }
+    .close-progress-fill { height: 100%; border-radius: 3px; background: var(--green); transition: width 0.5s cubic-bezier(0.16,1,0.3,1); }
+    .close-stat-card {
+      padding: 12px 14px; border-radius: 7px; background: var(--tint);
+      border: 1px solid var(--border-sub);
     }
-    .fade-up {
-      opacity: 0;
-      animation: fadeUp 0.6s ease forwards;
+    .close-stat-label {
+      font-size: 9.5px; font-weight: 500; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 5px;
     }
-    .fade-up-d1 { animation-delay: 0.1s; }
-    .fade-up-d2 { animation-delay: 0.2s; }
-    .fade-up-d3 { animation-delay: 0.3s; }
-    .fade-up-d4 { animation-delay: 0.4s; }
-    .fade-up-d5 { animation-delay: 0.5s; }
+    .close-stat-val { font-size: 13px; font-weight: 600; color: var(--black); }
+    .close-stat-sub { font-size: 10.5px; margin-top: 2px; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       .nav-logo { height: 36px; }
-      .nav-inner { padding: 0 20px; height: 52px; }
-      .nav-links li:not(:last-child) { display: none; }
-      .nav-links { gap: 0; }
-      .hero { padding: 110px 20px 48px; }
+      nav { padding: 12px 20px; }
+      .nav-right a:not(.nav-cta-btn) { display: none; }
+      .hero { padding: 60px 20px 48px; }
       .hero h1 { font-size: 38px; line-height: 1.15; }
-      .hero-desc { font-size: 15px; }
+      .hero-sub { font-size: 15px !important; }
       .hero-actions { flex-direction: column; align-items: stretch; }
-      .hero-actions .btn-primary,
-      .hero-actions .btn-secondary { width: 100%; justify-content: center; }
+      .hero-actions .btn-dark, .hero-actions .btn-outline { width: 100%; text-align: center; }
+      .hero-stats { flex-direction: column; gap: 20px; }
+      .s-head h2 { font-size: 30px; }
       .pain-grid { grid-template-columns: 1fr; }
-      .steps { grid-template-columns: 1fr; gap: 32px; }
-      .features-grid { grid-template-columns: 1fr; }
-      section { padding: 56px 20px; }
-      .section-heading { font-size: 30px; line-height: 1.2; }
-      .product-shot { padding: 0 16px; }
-      .showcase-item { gap: 28px; }
-      .showcase-text h3 { font-size: 24px; }
-      .compare-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -20px; padding: 0 20px; }
-      .compare-table { font-size: 12px; min-width: 520px; }
-      .compare-table thead th,
-      .compare-table tbody td { padding: 10px 14px; }
-      .industry-tags { justify-content: center; }
-      .industry-tag { font-size: 12px; padding: 6px 12px; }
-      .cta-band { padding: 64px 20px; }
-      .cta-band h2 { font-size: 30px; }
-      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
-      .footer-left { flex-direction: column; gap: 12px; }
-      .footer-logo { height: 32px; }
-      .guarantee { padding: 40px 24px; margin: 0 20px; }
-      .lightbox-hint { display: none; }
+      .paths-grid { grid-template-columns: 1fr; }
+      .section-white, .section-gray { padding: 56px 20px; }
+      .app-frame { border-radius: 8px; }
+      .app-frame-inner { height: auto; min-height: 400px; }
+      .app-sidebar { display: none; }
+      .compare-grid { font-size: 11px; }
+      .compare-head, .compare-row { grid-template-columns: 1.2fr 1fr 1fr 0.8fr; padding: 8px 12px; }
+      .cta-section { padding: 64px 20px; }
+      .cta-section h2 { font-size: 30px; }
+      .cta-buttons { flex-direction: column; align-items: stretch; }
+      .cta-buttons .btn-dark, .cta-buttons .btn-outline { width: 100%; text-align: center; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
     }
     @media (max-width: 480px) {
       .hero h1 { font-size: 32px; }
-      .section-heading { font-size: 26px; }
-      .nav-logo { height: 30px; }
-      .showcase-text h3 { font-size: 22px; }
+      .s-head h2 { font-size: 26px; }
     }
 
-    /* ── LIGHTBOX ── */
-    .lightbox-trigger { cursor: pointer; position: relative; }
-    .lightbox-trigger::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 10px;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-      background: rgba(0,0,0,0.03);
-    }
-    .lightbox-trigger:hover::after { opacity: 1; }
-    .lightbox-trigger:hover { transform: translateY(-2px); transition: transform 0.2s ease; }
-    .lightbox-hint {
-      position: absolute;
-      bottom: 12px;
-      right: 12px;
-      background: rgba(0,0,0,0.6);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 500;
-      padding: 5px 10px;
-      border-radius: 6px;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-      pointer-events: none;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      z-index: 2;
-    }
-    .lightbox-trigger:hover .lightbox-hint { opacity: 1; }
-    .lightbox-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-      cursor: zoom-out;
-    }
-    .lightbox-overlay.active { opacity: 1; visibility: visible; }
-    .lightbox-overlay img {
-      max-width: 92vw;
-      max-height: 90vh;
-      border-radius: 10px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-      transform: scale(0.95);
-      transition: transform 0.3s ease;
-    }
-    .lightbox-overlay.active img { transform: scale(1); }
-    .lightbox-close {
-      position: absolute;
-      top: 20px;
-      right: 24px;
-      width: 36px;
-      height: 36px;
-      background: rgba(255,255,255,0.15);
-      border: none;
-      border-radius: 50%;
-      color: #fff;
-      font-size: 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s ease;
-    }
-    .lightbox-close:hover { background: rgba(255,255,255,0.25); }
+    /* ── STEP ANIMATION HELPERS ── */
+    .step-hidden { opacity: 0; transform: translateX(-10px); }
+    .step-visible { opacity: 1; transform: translateX(0); transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
   </style>
 </head>
 <body>
 
-<!-- ── NAV ── -->
+<!-- ══ NAV ══ -->
 <nav>
-  <div class="nav-inner">
-    <img src="porter-logo-nav.svg" alt="Porter" class="nav-logo">
-    <ul class="nav-links">
-      <li><a href="#problem">The Problem</a></li>
-      <li><a href="#how-it-works">How It Works</a></li>
-      <li><a href="#features">Features</a></li>
-      <li><a href="#contact" class="nav-cta">Talk to Us</a></li>
-    </ul>
+  <a href="#"><img src="porter-logo-light.svg" alt="Porter" class="nav-logo"></a>
+  <div class="nav-right">
+    <a href="#pain">How It Works</a>
+    <a href="#features">Features</a>
+    <a href="#contact">Talk to Us</a>
+    <a href="mailto:support@buildwithporter.com" class="nav-cta-btn">Get Started</a>
   </div>
 </nav>
 
-<!-- ── HERO ── -->
-<div class="hero">
-  <div class="hero-badge fade-up">
-    <span class="hero-badge-dot"></span>
-    Now onboarding new clients
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-dot-grid"></div>
+  <div class="hero-content">
+    <div class="anim-target" data-delay="100" style="display:inline-block">
+      <div class="pill pill-border" style="margin-bottom:28px">
+        <div class="pill-dot"></div>
+        <span class="pill-text" style="font-size:12px;text-transform:none;letter-spacing:0">Now onboarding new clients</span>
+      </div>
+    </div>
+    <h1 class="anim-target" data-delay="200">Your AI financial copilot.<br>Always on. Always ready.</h1>
+    <p class="hero-sub anim-target" data-delay="350">Porter closes your books, explains your numbers, generates reports with real insights, and answers any question about your financial data — like having a senior financial analyst by your side, at a fraction of the cost.</p>
+    <div class="hero-actions anim-target" data-delay="450">
+      <a href="mailto:support@buildwithporter.com" class="btn-dark">See Porter in Action</a>
+      <a href="#pain" class="btn-outline">Why Founders Switch</a>
+    </div>
+    <p class="hero-note anim-target" data-delay="500">Works with QuickBooks Online. No migration required.</p>
+    <div class="hero-stats anim-target" data-delay="600">
+      <div class="hero-stat">
+        <div class="hero-stat-val">3–5 day</div>
+        <div class="hero-stat-label">monthly close</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">90+</div>
+        <div class="hero-stat-label">AI tools via MCP</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">24/7</div>
+        <div class="hero-stat-label">instant answers</div>
+      </div>
+    </div>
   </div>
-  <h1 class="fade-up fade-up-d1">Finally, books you can<br>actually trust.</h1>
-  <p class="fade-up fade-up-d2">Porter is the AI-native accounting platform built for business owners and operators, not accountants. We manage your books, close them fast, and make every number explainable. Log in anytime and understand exactly where your business stands.</p>
-  <div class="hero-actions fade-up fade-up-d3">
-    <a href="#contact" class="btn-primary">
-      See Porter in action
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3.5 8h9m0 0L8.5 4m4 4l-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
-    <a href="#problem" class="btn-secondary">Why founders switch</a>
-  </div>
-  <p class="hero-subtext fade-up fade-up-d4">Works with QuickBooks Online. No migration required.</p>
-</div>
+</section>
 
-<!-- ── PRODUCT SCREENSHOT (HERO) ── -->
-<div class="product-shot fade-up fade-up-d5">
-  <div class="product-shot-inner">
-    <img src="screenshot-dashboard.png" alt="Porter dashboard showing cash position, burn rate, runway metrics, and P&L with revenue charts" loading="lazy">
+<!-- ══ PAIN POINTS ══ -->
+<section class="section-white" id="pain" style="background:linear-gradient(180deg, #FAFAFA 0%, #F5F3F0 100%)">
+  <div class="s-head anim-target">
+    <div class="pill pill-green"><div class="pill-dot"></div><span class="pill-text">Sound familiar?</span></div>
+    <h2>You've been here before.</h2>
+    <p>Every founder hits the same walls with their financial operations. Here's what changes with Porter.</p>
   </div>
-</div>
-
-<!-- ── PAIN POINTS ── -->
-<section id="problem">
-  <div class="section-label">The problem</div>
-  <div class="section-heading">You outsourced your bookkeeping. But the problems didn't go away.</div>
-  <div class="section-desc">Whether it's a firm, a freelancer, or an in-house hire, the same frustrations keep coming up. Here's what founders tell us over and over.</div>
   <div class="pain-grid">
-    <div class="pain-card">
-      <div class="pain-number">01</div>
-      <div class="pain-title">Slow and unresponsive</div>
-      <div class="pain-desc">You wait days or weeks for replies. Critical questions stall. Month-end momentum dies. You're paying for a service that moves slower than you do.</div>
+    <div class="pain-card anim-target" data-delay="200">
+      <div class="frustration">"Why are my margins compressing?"</div>
+      <div class="before"><strong>Before: </strong>Hours in Excel. Pivot tables. Still not sure.</div>
+      <div class="after"><strong>With Porter: </strong>Porter tells you in minutes — which line items moved, by how much, and why it matters.</div>
     </div>
-    <div class="pain-card">
-      <div class="pain-number">02</div>
-      <div class="pain-title">Communication is chaos</div>
-      <div class="pain-desc">Important context lives across Slack, email, texts, and shared folders. When your bookkeeper misses something, nobody knows where the instruction originally lived.</div>
+    <div class="pain-card anim-target" data-delay="300">
+      <div class="frustration">"OpEx jumped 17% this month. Why?"</div>
+      <div class="before"><strong>Before: </strong>Comb through transactions, vendor by vendor, hoping to spot the spike.</div>
+      <div class="after"><strong>With Porter: </strong>Porter breaks it down by vendor and category instantly. You see exactly what drove the increase.</div>
     </div>
-    <div class="pain-card">
-      <div class="pain-number">03</div>
-      <div class="pain-title">They don't understand your business</div>
-      <div class="pain-desc">Your bookkeeper manages 20 to 30 clients. They don't have the context to categorize transactions correctly or maintain schedules accurately. Nuances never make it into the ledger.</div>
+    <div class="pain-card anim-target" data-delay="400">
+      <div class="frustration">"Reports that don't tell me anything."</div>
+      <div class="before"><strong>Before: </strong>Static P&amp;L and balance sheet. No context. No recommendations.</div>
+      <div class="after"><strong>With Porter: </strong>Porter generates reports that explain what changed, what's trending, and what to pay attention to — written for you, not your accountant.</div>
     </div>
-    <div class="pain-card">
-      <div class="pain-number">04</div>
-      <div class="pain-title">Output is slow, inconsistent, and wrong</div>
-      <div class="pain-desc">Month-end takes 3 to 4 weeks. Prepaids, accruals, and depreciation schedules get missed. Nuanced transactions are booked incorrectly. Someone internal still has to review everything, defeating the purpose of outsourcing.</div>
+    <div class="pain-card anim-target" data-delay="500">
+      <div class="frustration">"Accounts that don't match my business."</div>
+      <div class="before"><strong>Before: </strong>Your chart of accounts was set up by someone who doesn't know your business. The labels are meaningless.</div>
+      <div class="after"><strong>With Porter: </strong>Porter restructures your books so every account and label maps to how you actually think about your business.</div>
     </div>
-    <div class="pain-card">
-      <div class="pain-number">05</div>
-      <div class="pain-title">Static financials, zero insight</div>
-      <div class="pain-desc">Your bookkeeper delivers financial statements and considers the job done. But you need more: what changed this month, should you be concerned, and how does this affect runway, hiring, or pricing? You get reports. You need clarity.</div>
+    <div class="pain-card anim-target" data-delay="600">
+      <div class="frustration">"I'd hire a financial analyst, but..."</div>
+      <div class="before"><strong>Before: </strong>$80–120K for a senior hire. Not the right time when you need another engineer or salesperson.</div>
+      <div class="after"><strong>With Porter: </strong>Porter gives you the analysis, the answers, and the insight — 24/7, at a fraction of the cost.</div>
     </div>
-    <div class="pain-card" style="display: flex; align-items: center; justify-content: center; text-align: center;">
-      <div>
-        <div class="pain-title" style="font-family: 'Instrument Serif', Georgia, serif; font-size: 20px; font-weight: 400; margin-bottom: 10px; color: var(--text);">The result?</div>
-        <div class="pain-desc" style="font-size: 14px;">Founders end up with numbers they can't trust and a finance function that feels like a black box.</div>
+    <div class="pain-card anim-target" data-delay="700">
+      <div class="frustration">"Books arrive 3 weeks late. Full of errors."</div>
+      <div class="before"><strong>Before: </strong>Your outsourced bookkeeper closes late, miscategorizes transactions, and you still have to review everything.</div>
+      <div class="after"><strong>With Porter: </strong>Porter closes within 3–5 days with AI-powered categorization that actually learns your business.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TWO PATHS ══ -->
+<section class="section-gray" id="features">
+  <div class="s-head anim-target">
+    <div class="pill pill-green"><div class="pill-dot"></div><span class="pill-text">Two ways to work</span></div>
+    <h2>Choose how you want your books done.</h2>
+    <p>Whether you want a team managing everything or AI-powered tools to move faster on your own — Porter meets you where you are.</p>
+  </div>
+  <div class="paths-grid">
+    <div class="path-card anim-target" data-delay="200">
+      <div class="path-tag">MANAGED SERVICE</div>
+      <h3>We do it for you.</h3>
+      <p>Porter's team, powered by AI, manages your books end-to-end. Monthly closes in days. Full transparency into every number.</p>
+      <div class="path-features">
+        <div class="path-feature"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 4.5" stroke="#2D6A4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Books closed within 3–7 days</span></div>
+        <div class="path-feature"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 4.5" stroke="#2D6A4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>AI categorization reviewed by humans</span></div>
+        <div class="path-feature"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 4.5" stroke="#2D6A4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Automated schedules and journal entries</span></div>
+        <div class="path-feature"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 4.5" stroke="#2D6A4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Monthly reports that explain what changed</span></div>
+        <div class="path-feature"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 4.5" stroke="#2D6A4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Log in anytime — every number is explainable</span></div>
+      </div>
+      <div class="path-cta-area">
+        <a href="mailto:support@buildwithporter.com" class="btn-dark" style="width:100%;text-align:center">Talk to Us</a>
+        <p class="path-note">For founders who want to stop thinking about bookkeeping.</p>
+      </div>
+    </div>
+    <div class="path-card anim-target" data-delay="400">
+      <div class="path-tag">SELF-SERVE PLATFORM</div>
+      <h3>AI tools. Your control.</h3>
+      <p>Connect Porter to Claude, Cursor, or any AI client via MCP. Categorize, close, reconcile, and ask your books anything — from a single conversation.</p>
+      <div class="path-features">
+        <div class="path-feature"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 4.5" stroke="#2D6A4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>90+ AI tools via Model Context Protocol</span></div>
+        <div class="path-feature"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 4.5" stroke="#2D6A4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Natural-language questions about financials</span></div>
+        <div class="path-feature"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 4.5" stroke="#2D6A4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Categorize and post transactions with AI</span></div>
+        <div class="path-feature"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 4.5" stroke="#2D6A4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Build and maintain schedules automatically</span></div>
+        <div class="path-feature"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 4.5" stroke="#2D6A4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Generate reports and insights on demand</span></div>
+      </div>
+      <div class="path-cta-area">
+        <a href="mailto:support@buildwithporter.com" class="btn-outline" style="width:100%;text-align:center">Try Porter</a>
+        <p class="path-note">For operators and finance-savvy founders who want superpowers.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── HOW IT WORKS ── -->
-<section id="how-it-works" style="border-top: 1px solid var(--border-sub);">
-  <div class="section-label">How it works</div>
-  <div class="section-heading">Three steps to books you actually understand.</div>
-  <div class="section-desc">No onboarding headaches. We connect to your QuickBooks, learn your business, and take it from there.</div>
-  <div class="steps">
-    <div class="step">
-      <div class="step-number">01</div>
-      <h3>Connect your QuickBooks</h3>
-      <p>We link directly to your QBO account. No data migration, no manual uploads. Your existing chart of accounts stays intact.</p>
-    </div>
-    <div class="step">
-      <div class="step-number">02</div>
-      <h3>We learn your business</h3>
-      <p>Porter studies your transaction history, vendor patterns, and account structure. Within days, it categorizes with the accuracy of a senior bookkeeper who actually knows your business.</p>
-    </div>
-    <div class="step">
-      <div class="step-number">03</div>
-      <h3>Books you can trust, every month</h3>
-      <p>Your books close within days of month-end. You get clear financial reports that explain what changed, what matters, and what to do next. Log in anytime. Every number is explainable.</p>
+<!-- ══ MCP DEMO 1: AI-POWERED CLOSE ══ -->
+<section class="section-white" id="mcp-close">
+  <div class="s-head anim-target">
+    <div class="pill pill-green"><div class="pill-dot"></div><span class="pill-text">AI-Powered Close</span></div>
+    <h2>Ask where you stand. Porter does the rest.</h2>
+    <p>Porter doesn't just report status — it identifies what's outstanding, tells you what it can handle, and executes.</p>
+  </div>
+  <div class="app-frame anim-target" data-delay="200" id="demo-close">
+    <div class="app-frame-inner">
+      <div class="app-sidebar">
+        <div class="sidebar-logo"><img src="porter-logo-dark-transparent.svg" alt="Porter" style="height:28px;width:auto"></div>
+        <div class="sidebar-nav">
+          <div class="sidebar-item">Home</div>
+          <div class="sidebar-item active">Porter AI</div>
+          <div class="sidebar-item">Transactions</div>
+          <div class="sidebar-item">Schedules</div>
+          <div class="sidebar-item">Monthly Close</div>
+          <div class="sidebar-item">Reports</div>
+          <div class="sidebar-item">Trial Balance</div>
+        </div>
+        <div class="sidebar-bottom"><div class="sidebar-item">Settings</div></div>
+        <div class="sidebar-user"><div class="sidebar-user-avatar">J</div><span>Jordan Mitchell</span></div>
+      </div>
+      <div class="app-main">
+        <div class="app-topbar">
+          <span class="app-topbar-title">Greenfield Properties</span>
+          <span class="app-topbar-badge">QBO</span>
+        </div>
+        <div class="app-content">
+          <div class="chat-area" id="close-chat">
+            <!-- Steps injected by JS -->
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ── FEATURES ── -->
-<section id="features" style="border-top: 1px solid var(--border-sub);">
-  <div class="section-label">What you get</div>
-  <div class="section-heading">Everything your bookkeeper does.<br>Plus everything they can't.</div>
-  <div class="section-desc">Porter is AI-native, but there are always humans making sure the numbers are right. AI supercharges our team of excellent bookkeepers and accountants so you get faster closes and fewer errors.</div>
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#525252" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg>
+<!-- ══ MCP DEMO 2: SMART CATEGORIZATION ══ -->
+<section class="section-gray" id="mcp-cat">
+  <div class="s-head anim-target">
+    <div class="pill pill-green"><div class="pill-dot"></div><span class="pill-text">Smart Categorization</span></div>
+    <h2>Categorize, review, and post — in one conversation.</h2>
+    <p>Porter applies your rules, flags what it can't match, and posts approved transactions to QuickBooks.</p>
+  </div>
+  <div class="app-frame anim-target" data-delay="200" id="demo-cat">
+    <div class="app-frame-inner">
+      <div class="app-sidebar">
+        <div class="sidebar-logo"><img src="porter-logo-dark-transparent.svg" alt="Porter" style="height:28px;width:auto"></div>
+        <div class="sidebar-nav">
+          <div class="sidebar-item">Home</div>
+          <div class="sidebar-item active">Porter AI</div>
+          <div class="sidebar-item">Transactions</div>
+          <div class="sidebar-item">Schedules</div>
+          <div class="sidebar-item">Monthly Close</div>
+          <div class="sidebar-item">Reports</div>
+          <div class="sidebar-item">Trial Balance</div>
+        </div>
+        <div class="sidebar-bottom"><div class="sidebar-item">Settings</div></div>
+        <div class="sidebar-user"><div class="sidebar-user-avatar">J</div><span>Jordan Mitchell</span></div>
       </div>
-      <h3>Intelligent categorization</h3>
-      <p>Every bank and credit card transaction is automatically categorized using AI that learns your specific business patterns. No more chasing your bookkeeper to fix the same mistakes every month.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#525252" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+      <div class="app-main">
+        <div class="app-topbar">
+          <span class="app-topbar-title">Greenfield Properties</span>
+          <span class="app-topbar-badge">QBO</span>
+        </div>
+        <div class="app-content">
+          <div class="chat-area" id="cat-chat"></div>
+        </div>
       </div>
-      <h3>Schedules that maintain themselves</h3>
-      <p>Prepaids, fixed assets, depreciation, and revenue recognition, all built, calculated, and posted automatically. The stuff your bookkeeper forgets or tracks in a spreadsheet you never see.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#525252" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg>
-      </div>
-      <h3>Fast monthly close</h3>
-      <p>Books closed within days of month-end, not 3 to 4 weeks. Reconciled, reviewed, and ready. No chasing someone for status updates.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#525252" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-      </div>
-      <h3>Reports that explain, not just report</h3>
-      <p>Monthly financials that tell you what changed, why it matters, and what to pay attention to. P&amp;L, balance sheet, and cash flow, in language you understand, not accounting jargon.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#525252" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-      </div>
-      <h3>Full transparency, always</h3>
-      <p>Log in anytime and see exactly what's happening with your books. Every transaction, every schedule, every number is explained and accessible. No more black box.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#525252" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      </div>
-      <h3>Business-aware accuracy</h3>
-      <p>Porter learns the drivers of your business, not just your chart of accounts. That means fewer errors, fewer questions, and categorization that actually reflects how your company operates.</p>
     </div>
   </div>
 </section>
 
-<!-- ── PRODUCT SHOWCASE ── -->
-<div class="showcase">
-  <div class="section-label">See it in action</div>
-  <div class="section-heading" style="margin-bottom: 48px;">Built for operators. Every screen earns your trust.</div>
-
-  <!-- Bank Transactions -->
-  <div class="showcase-item">
-    <div class="showcase-text">
-      <div class="section-label">Transaction management</div>
-      <h3>Every transaction, categorized and ready to review.</h3>
-      <p>Bank and credit card transactions flow in automatically. Porter categorizes each one using patterns it learns from your business, flagging what needs attention and handling the rest. You see a clear "Ready" vs "Needs Review" inbox instead of an unorganized dump of data.</p>
-    </div>
-    <div class="showcase-img">
-      <img src="screenshot-bank-transactions.png" alt="Porter bank transaction categorization with AI-suggested GL accounts and review status" loading="lazy">
-    </div>
+<!-- ══ MCP DEMO 3: RECONCILIATION ══ -->
+<section class="section-white" id="mcp-recon">
+  <div class="s-head anim-target">
+    <div class="pill pill-green"><div class="pill-dot"></div><span class="pill-text">Reconciliation</span></div>
+    <h2>Find the discrepancy. Fix it. Move on.</h2>
+    <p>Porter compares bank to QBO, surfaces variances, traces them to specific transactions, and offers to fix them.</p>
   </div>
-
-  <!-- Schedules -->
-  <div class="showcase-item reverse">
-    <div class="showcase-text">
-      <div class="section-label">Schedule management</div>
-      <h3>The stuff your bookkeeper keeps forgetting.</h3>
-      <p>Fixed assets, prepaids, intangibles. Porter tracks every schedule, calculates monthly entries, and posts journal entries to QuickBooks automatically. No more spreadsheets. No more missed periods. No more "we'll catch up next month."</p>
+  <div class="app-frame anim-target" data-delay="200" id="demo-recon">
+    <div class="app-frame-inner">
+      <div class="app-sidebar">
+        <div class="sidebar-logo"><img src="porter-logo-dark-transparent.svg" alt="Porter" style="height:28px;width:auto"></div>
+        <div class="sidebar-nav">
+          <div class="sidebar-item">Home</div>
+          <div class="sidebar-item active">Porter AI</div>
+          <div class="sidebar-item">Transactions</div>
+          <div class="sidebar-item">Schedules</div>
+          <div class="sidebar-item">Monthly Close</div>
+          <div class="sidebar-item">Reports</div>
+          <div class="sidebar-item">Trial Balance</div>
+        </div>
+        <div class="sidebar-bottom"><div class="sidebar-item">Settings</div></div>
+        <div class="sidebar-user"><div class="sidebar-user-avatar">J</div><span>Jordan Mitchell</span></div>
+      </div>
+      <div class="app-main">
+        <div class="app-topbar">
+          <span class="app-topbar-title">Greenfield Properties</span>
+          <span class="app-topbar-badge">QBO</span>
+        </div>
+        <div class="app-content">
+          <div class="chat-area" id="recon-chat"></div>
+        </div>
+      </div>
     </div>
-    <div class="showcase-img">
-      <img src="screenshot-schedules-activity.png" alt="Porter depreciation schedule showing monthly activity grid with posted and pending periods" loading="lazy">
-    </div>
-  </div>
-
-  <!-- Invoices & Payments -->
-  <div class="showcase-item">
-    <div class="showcase-text">
-      <div class="section-label">Revenue tracking</div>
-      <h3>Invoices and payments, matched and tracked.</h3>
-      <p>Track every invoice from issuance to payment. Porter matches incoming payments to open invoices, flags aging receivables, and keeps your revenue clean. No more chasing spreadsheets or your bookkeeper for updates.</p>
-    </div>
-    <div class="showcase-img">
-      <img src="screenshot-invoices.png" alt="Porter invoice management showing open, paid, and overdue invoices with customer details" loading="lazy">
-    </div>
-  </div>
-
-  <!-- Financial Reports -->
-  <div class="showcase-item reverse">
-    <div class="showcase-text">
-      <div class="section-label">Financial intelligence</div>
-      <h3>Reports that answer the questions founders actually ask.</h3>
-      <p>Every month, Porter generates a financial review that tells you what changed, what's trending, and what needs attention, with variance analysis, expense breakdown, and recommendations. Written for you, not your accountant.</p>
-    </div>
-    <div class="showcase-img">
-      <img src="screenshot-financial-report.png" alt="Porter AI-generated financial report with P&L summary, expense breakdown, and recommendations" loading="lazy">
-    </div>
-  </div>
-</div>
-
-<!-- ── COMPARISON TABLE ── -->
-<section style="border-top: 1px solid var(--border-sub);">
-  <div class="section-label">Why Porter</div>
-  <div class="section-heading">Not another bookkeeping service.</div>
-  <div class="section-desc">Porter combines the reliability of a managed service with AI that actually understands your business.</div>
-  <div class="compare-wrap">
-  <table class="compare-table">
-    <thead>
-      <tr>
-        <th style="width: 40%;"></th>
-        <th class="compare-highlight" style="width: 20%;">Porter</th>
-        <th style="width: 20%;">Outsourced Bookkeeper</th>
-        <th style="width: 20%;">DIY in QBO</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Monthly close time</td>
-        <td class="compare-highlight"><strong>3-7 days</strong></td>
-        <td>3–4 weeks</td>
-        <td class="dash">Varies</td>
-      </tr>
-      <tr>
-        <td>Transaction accuracy</td>
-        <td class="compare-highlight"><span class="check">AI + business context</span></td>
-        <td>Generic rules</td>
-        <td>Manual</td>
-      </tr>
-      <tr>
-        <td>Prepaids, depreciation, schedules</td>
-        <td class="compare-highlight"><span class="check">Automated</span></td>
-        <td>Frequently missed</td>
-        <td class="dash">-</td>
-      </tr>
-      <tr>
-        <td>Responsiveness</td>
-        <td class="compare-highlight"><span class="check">Instant visibility</span></td>
-        <td>Days to weeks</td>
-        <td class="dash">N/A</td>
-      </tr>
-      <tr>
-        <td>Reports with explanation</td>
-        <td class="compare-highlight"><span class="check">Every month</span></td>
-        <td>Static financials only</td>
-        <td class="dash">-</td>
-      </tr>
-      <tr>
-        <td>Founder can log in and understand</td>
-        <td class="compare-highlight"><span class="check">✓</span></td>
-        <td class="dash">-</td>
-        <td>Built for accountants</td>
-      </tr>
-      <tr>
-        <td>Works with your CPA</td>
-        <td class="compare-highlight"><span class="check">✓</span></td>
-        <td><span class="check">✓</span></td>
-        <td><span class="check">✓</span></td>
-      </tr>
-    </tbody>
-  </table>
   </div>
 </section>
 
-<!-- ── THE PORTER GUARANTEE ── -->
-<div class="promise">
-  <div style="max-width: 1120px; margin: 0 auto;">
-    <div class="section-label" style="text-align: center;">The Porter guarantee</div>
-    <div class="promise-heading">We manage your books for you. But you can log in anytime and understand what every number means.</div>
-    <p>Bookkeeping shouldn't be a black box. Porter gives you a managed service with the transparency of doing it yourself. Every transaction, schedule, and report is accessible and explainable. Your books are your business. You should be able to understand them.</p>
+<!-- ══ PORTER AI: ASK ANYTHING ══ -->
+<section class="section-gray" id="mcp-ask">
+  <div class="s-head anim-target">
+    <div class="pill pill-green"><div class="pill-dot"></div><span class="pill-text">Ask Anything</span></div>
+    <h2>Your books answer back.</h2>
+    <p>Porter queries your real financial data in real-time. AR aging, vendor spend, cash position — any question, grounded in your actual numbers.</p>
   </div>
-</div>
-
-<!-- ── INDUSTRIES ── -->
-<section>
-  <div class="section-label">Who it's for</div>
-  <div class="section-heading">Built for founders running real businesses.</div>
-  <div class="section-desc">Porter works best for companies doing $250K–$10M in annual revenue with 50+ monthly transactions and a QuickBooks Online account.</div>
-  <div class="industry-tags">
-    <span class="industry-tag">Startups</span>
-    <span class="industry-tag">Professional Services</span>
-    <span class="industry-tag">Agencies</span>
-    <span class="industry-tag">SaaS</span>
-    <span class="industry-tag">Consulting</span>
-    <span class="industry-tag">E-commerce</span>
-    <span class="industry-tag">Home Services</span>
-    <span class="industry-tag">Construction</span>
-    <span class="industry-tag">HVAC &amp; Plumbing</span>
-    <span class="industry-tag">Landscaping</span>
-    <span class="industry-tag">Legal</span>
-    <span class="industry-tag">Engineering</span>
+  <div class="app-frame anim-target" data-delay="200" id="demo-ask">
+    <div class="app-frame-inner">
+      <div class="app-sidebar">
+        <div class="sidebar-logo"><img src="porter-logo-dark-transparent.svg" alt="Porter" style="height:28px;width:auto"></div>
+        <div class="sidebar-nav">
+          <div class="sidebar-item">Home</div>
+          <div class="sidebar-item active">Porter AI</div>
+          <div class="sidebar-item">Transactions</div>
+          <div class="sidebar-item">Schedules</div>
+          <div class="sidebar-item">Monthly Close</div>
+          <div class="sidebar-item">Reports</div>
+          <div class="sidebar-item">Trial Balance</div>
+        </div>
+        <div class="sidebar-bottom"><div class="sidebar-item">Settings</div></div>
+        <div class="sidebar-user"><div class="sidebar-user-avatar">J</div><span>Jordan Mitchell</span></div>
+      </div>
+      <div class="app-main">
+        <div class="app-topbar">
+          <span class="app-topbar-title">Apex Home Services</span>
+          <span class="app-topbar-badge">QBO</span>
+        </div>
+        <div class="app-content">
+          <div class="chat-area" id="ask-chat"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ── FINAL CTA ── -->
-<div class="cta-band" id="contact" style="border-top: 1px solid var(--border-sub);">
-  <h2>Your books should work<br>as hard as you do.</h2>
-  <p>Tell us about your business and we'll show you how Porter replaces the back-and-forth with books you can actually trust.</p>
-  <a href="mailto:support@buildwithporter.com" class="btn-primary" style="font-size: 15px; padding: 14px 32px;">
-    Talk to us
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3.5 8h9m0 0L8.5 4m4 4l-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </a>
-  <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px; max-width: 100%;">No credit card required. We'll schedule a 15-minute call to understand your business.</p>
-</div>
+<!-- ══ DASHBOARD ══ -->
+<section class="section-white" id="dashboard">
+  <div class="s-head anim-target">
+    <div class="pill pill-green"><div class="pill-dot"></div><span class="pill-text">Dashboard</span></div>
+    <h2>Know where you stand. Always.</h2>
+    <p>Revenue, expenses, AR aging, and AI-powered alerts — all in one view. Log in anytime.</p>
+  </div>
+  <div class="app-frame anim-target" data-delay="200" id="demo-dashboard">
+    <div class="app-frame-inner">
+      <div class="app-sidebar">
+        <div class="sidebar-logo"><img src="porter-logo-dark-transparent.svg" alt="Porter" style="height:28px;width:auto"></div>
+        <div class="sidebar-nav">
+          <div class="sidebar-item active">Home</div>
+          <div class="sidebar-item">Porter AI</div>
+          <div class="sidebar-item">Transactions</div>
+          <div class="sidebar-item">Schedules</div>
+          <div class="sidebar-item">Monthly Close</div>
+          <div class="sidebar-item">Reports</div>
+          <div class="sidebar-item">Trial Balance</div>
+        </div>
+        <div class="sidebar-bottom"><div class="sidebar-item">Settings</div></div>
+        <div class="sidebar-user"><div class="sidebar-user-avatar">J</div><span>Jordan Mitchell</span></div>
+      </div>
+      <div class="app-main">
+        <div class="app-topbar">
+          <span class="app-topbar-title">Greenfield Properties</span>
+          <span class="app-topbar-badge">QBO</span>
+        </div>
+        <div class="app-content" id="dashboard-content">
+          <div style="padding:16px;height:100%;overflow-y:auto">
+            <!-- Revenue vs Expenses Chart -->
+            <div style="padding:16px;border-radius:8px;border:1px solid var(--border-sub);margin-bottom:16px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+                <span style="font-size:12.5px;font-weight:500;color:var(--black)">Revenue vs Expenses (LTM)</span>
+                <div style="display:flex;gap:12px">
+                  <div style="display:flex;align-items:center;gap:4px"><div style="width:7px;height:7px;border-radius:2px;background:var(--green)"></div><span style="font-size:10px;color:var(--muted)">Revenue</span></div>
+                  <div style="display:flex;align-items:center;gap:4px"><div style="width:7px;height:7px;border-radius:2px;background:#D4D4D4"></div><span style="font-size:10px;color:var(--muted)">Expenses</span></div>
+                </div>
+              </div>
+              <div id="chart-bars" style="display:flex;align-items:flex-end;gap:6px;height:150px;padding-bottom:20px;border-bottom:1px solid var(--border-sub)">
+                <!-- JS populates -->
+              </div>
+              <div style="display:flex;gap:16px;margin-top:10px;justify-content:center;flex-wrap:wrap">
+                <span style="font-size:10px"><span style="color:var(--muted)">Revenue </span><span style="font-weight:600">$2.0M</span></span>
+                <span style="font-size:10px"><span style="color:var(--muted)">COGS </span><span style="font-weight:600">$228k</span></span>
+                <span style="font-size:10px"><span style="color:var(--muted)">Gross Profit </span><span style="font-weight:600">$1.8M</span></span>
+                <span style="font-size:10px"><span style="color:var(--muted)">OpEx </span><span style="font-weight:600">$11.0M</span></span>
+                <span style="font-size:10px"><span style="color:var(--muted)">Net Income </span><span style="font-weight:600;color:var(--red)">$-7.8M</span></span>
+              </div>
+            </div>
+            <!-- AR Section -->
+            <div>
+              <div style="font-size:10px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px">Accounts Receivable</div>
+              <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:10px">
+                <span class="f-serif" style="font-size:26px;color:var(--black)">$448,781</span>
+                <span style="font-size:12px;color:var(--muted)">outstanding</span>
+                <div style="flex:1"></div>
+                <span style="font-size:11px;color:var(--red)">$87,739 past 60 days</span>
+              </div>
+              <div id="ar-bars" style="display:flex;height:8px;border-radius:4px;overflow:hidden;margin-bottom:10px">
+                <!-- JS populates -->
+              </div>
+              <div style="display:flex">
+                <div style="flex:48;min-width:0"><div style="display:flex;align-items:center;gap:3px;margin-bottom:2px"><div style="width:5px;height:5px;border-radius:50%;background:var(--green)"></div><span style="font-size:9px;color:var(--muted)">CURRENT</span></div><span class="f-mono" style="font-size:11px;font-weight:500">$215k</span></div>
+                <div style="flex:22;min-width:0"><div style="display:flex;align-items:center;gap:3px;margin-bottom:2px"><div style="width:5px;height:5px;border-radius:50%;background:var(--black)"></div><span style="font-size:9px;color:var(--muted)">1–30</span></div><span class="f-mono" style="font-size:11px;font-weight:500">$99k</span></div>
+                <div style="flex:10;min-width:0"><div style="display:flex;align-items:center;gap:3px;margin-bottom:2px"><div style="width:5px;height:5px;border-radius:50%;background:#6B7280"></div><span style="font-size:9px;color:var(--muted)">31–60</span></div><span class="f-mono" style="font-size:11px;font-weight:500">$47k</span></div>
+                <div style="flex:13;min-width:0"><div style="display:flex;align-items:center;gap:3px;margin-bottom:2px"><div style="width:5px;height:5px;border-radius:50%;background:var(--amber)"></div><span style="font-size:9px;color:var(--muted)">61–90</span></div><span class="f-mono" style="font-size:11px;font-weight:500">$59k</span></div>
+                <div style="flex:7;min-width:0"><div style="display:flex;align-items:center;gap:3px;margin-bottom:2px"><div style="width:5px;height:5px;border-radius:50%;background:var(--red)"></div><span style="font-size:9px;color:var(--muted)">90+</span></div><span class="f-mono" style="font-size:11px;font-weight:500">$29k</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-<!-- ── FOOTER ── -->
+<!-- ══ TRANSACTIONS ══ -->
+<section class="section-gray" id="transactions-section">
+  <div class="s-head anim-target">
+    <div class="pill pill-green"><div class="pill-dot"></div><span class="pill-text">Transactions</span></div>
+    <h2>Every transaction, categorized.</h2>
+    <p>Bank and credit card transactions flow in. Porter categorizes, flags what needs review, and handles the rest.</p>
+  </div>
+  <div class="app-frame anim-target" data-delay="200" id="demo-txns">
+    <div class="app-frame-inner">
+      <div class="app-sidebar">
+        <div class="sidebar-logo"><img src="porter-logo-dark-transparent.svg" alt="Porter" style="height:28px;width:auto"></div>
+        <div class="sidebar-nav">
+          <div class="sidebar-item">Home</div>
+          <div class="sidebar-item">Porter AI</div>
+          <div class="sidebar-item active">Transactions</div>
+          <div class="sidebar-item">Schedules</div>
+          <div class="sidebar-item">Monthly Close</div>
+          <div class="sidebar-item">Reports</div>
+          <div class="sidebar-item">Trial Balance</div>
+        </div>
+        <div class="sidebar-bottom"><div class="sidebar-item">Settings</div></div>
+        <div class="sidebar-user"><div class="sidebar-user-avatar">J</div><span>Jordan Mitchell</span></div>
+      </div>
+      <div class="app-main">
+        <div class="app-topbar">
+          <span class="app-topbar-title">Greenfield Properties</span>
+          <span class="app-topbar-badge">QBO</span>
+        </div>
+        <div class="app-content" id="txns-content">
+          <div style="height:100%;display:flex;flex-direction:column">
+            <div class="app-tabs">
+              <span class="app-tab active">Bank</span>
+              <span class="app-tab">Credit Cards</span>
+              <span class="app-tab">Invoices</span>
+              <span class="app-tab">Bills</span>
+              <span class="app-tab">Payments</span>
+            </div>
+            <div class="app-sub-tabs" id="txn-filter-tabs">
+              <span class="app-sub-tab active">All <span class="f-mono" style="font-size:9.5px;color:rgba(255,255,255,0.6);margin-left:4px">12,847</span></span>
+              <span class="app-sub-tab">Ready <span class="f-mono" style="font-size:9.5px;color:var(--muted);margin-left:4px">5</span></span>
+              <span class="app-sub-tab">Needs Review <span class="f-mono" style="font-size:9.5px;color:var(--muted);margin-left:4px">2</span></span>
+              <span class="app-sub-tab">Approved <span class="f-mono" style="font-size:9.5px;color:var(--muted);margin-left:4px">38</span></span>
+              <span class="app-sub-tab">Posted <span class="f-mono" style="font-size:9.5px;color:var(--muted);margin-left:4px">12,794</span></span>
+            </div>
+            <div style="display:grid;grid-template-columns:76px minmax(0,1fr) 95px minmax(0,1fr) 80px;padding:0 10px;height:28px;align-items:center;background:var(--tint);border-bottom:1px solid var(--border-sub)">
+              <span style="font-size:9.5px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em">DATE</span>
+              <span style="font-size:9.5px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em">DESCRIPTION</span>
+              <span style="font-size:9.5px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em">AMOUNT</span>
+              <span style="font-size:9.5px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em">ACCOUNT</span>
+              <span style="font-size:9.5px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em">STATUS</span>
+            </div>
+            <div style="flex:1;overflow:hidden" id="txn-rows">
+              <!-- JS populates -->
+            </div>
+            <div style="padding:6px 12px;border-top:1px solid var(--border-sub);display:flex;justify-content:space-between">
+              <span style="font-size:10px;color:var(--muted)">Showing 1 to 100 of 12,847</span>
+              <span style="font-size:10px;color:var(--muted)">Page 1 of 129</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MONTHLY CLOSE ══ -->
+<section class="section-white" id="close-section">
+  <div class="s-head anim-target">
+    <div class="pill pill-green"><div class="pill-dot"></div><span class="pill-text">Monthly Close</span></div>
+    <h2>Close in days, not weeks.</h2>
+    <p>A structured checklist guides every close. Track progress, see what's done, and never miss a step.</p>
+  </div>
+  <div class="app-frame anim-target" data-delay="200" id="demo-monthly">
+    <div class="app-frame-inner">
+      <div class="app-sidebar">
+        <div class="sidebar-logo"><img src="porter-logo-dark-transparent.svg" alt="Porter" style="height:28px;width:auto"></div>
+        <div class="sidebar-nav">
+          <div class="sidebar-item">Home</div>
+          <div class="sidebar-item">Porter AI</div>
+          <div class="sidebar-item">Transactions</div>
+          <div class="sidebar-item">Schedules</div>
+          <div class="sidebar-item active">Monthly Close</div>
+          <div class="sidebar-item">Reports</div>
+          <div class="sidebar-item">Trial Balance</div>
+        </div>
+        <div class="sidebar-bottom"><div class="sidebar-item">Settings</div></div>
+        <div class="sidebar-user"><div class="sidebar-user-avatar">J</div><span>Jordan Mitchell</span></div>
+      </div>
+      <div class="app-main">
+        <div class="app-topbar">
+          <span class="app-topbar-title">Greenfield Properties</span>
+          <span class="app-topbar-badge">QBO</span>
+        </div>
+        <div class="app-content" id="monthly-content">
+          <!-- JS populates -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SCHEDULES ══ -->
+<section class="section-gray" id="schedules-section">
+  <div class="s-head anim-target">
+    <div class="pill pill-green"><div class="pill-dot"></div><span class="pill-text">Schedules</span></div>
+    <h2>The stuff your bookkeeper keeps forgetting.</h2>
+    <p>Revenue recognition, prepaids, fixed assets, depreciation — all tracked, calculated, and posted to QBO automatically.</p>
+  </div>
+  <div class="app-frame anim-target" data-delay="200" id="demo-schedules">
+    <div class="app-frame-inner">
+      <div class="app-sidebar">
+        <div class="sidebar-logo"><img src="porter-logo-dark-transparent.svg" alt="Porter" style="height:28px;width:auto"></div>
+        <div class="sidebar-nav">
+          <div class="sidebar-item">Home</div>
+          <div class="sidebar-item">Porter AI</div>
+          <div class="sidebar-item">Transactions</div>
+          <div class="sidebar-item active">Schedules</div>
+          <div class="sidebar-item">Monthly Close</div>
+          <div class="sidebar-item">Reports</div>
+          <div class="sidebar-item">Trial Balance</div>
+        </div>
+        <div class="sidebar-bottom"><div class="sidebar-item">Settings</div></div>
+        <div class="sidebar-user"><div class="sidebar-user-avatar">J</div><span>Jordan Mitchell</span></div>
+      </div>
+      <div class="app-main">
+        <div class="app-topbar">
+          <span class="app-topbar-title">Greenfield Properties</span>
+          <span class="app-topbar-badge">QBO</span>
+        </div>
+        <div class="app-content" id="schedules-content">
+          <!-- JS populates -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COMPARISON ══ -->
+<section class="section-white" id="compare">
+  <div class="s-head anim-target">
+    <div class="pill pill-green"><div class="pill-dot"></div><span class="pill-text">Why Porter</span></div>
+    <h2>Not another bookkeeping service.</h2>
+    <p>Porter combines managed service reliability with AI that understands your business.</p>
+  </div>
+  <div class="compare-grid anim-target" data-delay="200">
+    <div class="compare-head">
+      <span></span>
+      <span>Porter</span>
+      <span>Bookkeeper</span>
+      <span>DIY / QBO</span>
+    </div>
+    <div class="compare-row"><span>Monthly close time</span><span class="porter-val">3–7 days</span><span class="other-val">3–4 weeks</span><span class="other-val">Varies</span></div>
+    <div class="compare-row"><span>Transaction accuracy</span><span class="porter-val">AI + business context</span><span class="other-val">Generic rules</span><span class="other-val">Manual</span></div>
+    <div class="compare-row"><span>Schedules &amp; depreciation</span><span class="porter-val">Automated</span><span class="other-val">Frequently missed</span><span class="other-val">—</span></div>
+    <div class="compare-row"><span>AI you can ask anything</span><span class="porter-val">✓</span><span class="other-val">—</span><span class="other-val">—</span></div>
+    <div class="compare-row"><span>Responsiveness</span><span class="porter-val">Instant</span><span class="other-val">Days to weeks</span><span class="other-val">N/A</span></div>
+    <div class="compare-row"><span>Reports that explain</span><span class="porter-val">Every month</span><span class="other-val">Static financials</span><span class="other-val">—</span></div>
+    <div class="compare-row"><span>Founder can log in &amp; understand</span><span class="porter-val">✓</span><span class="other-val">—</span><span class="other-val">Built for accountants</span></div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<section class="cta-section" id="contact">
+  <div class="anim-target">
+    <h2>Stop settling for books you can't trust.</h2>
+    <p>Join founders who replaced the back-and-forth with AI-powered books that close fast, explain everything, and actually make sense.</p>
+    <div class="cta-buttons">
+      <a href="mailto:support@buildwithporter.com" class="btn-dark" style="padding:14px 32px">Talk to Us</a>
+      <a href="mailto:support@buildwithporter.com" class="btn-outline" style="padding:14px 32px">Try the Platform</a>
+    </div>
+    <p class="cta-note">No credit card required. 15-minute call to understand your business.</p>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-left">
-      <img src="porter-logo-nav.svg" alt="Porter" class="footer-logo">
-      <span class="footer-copy">&copy; 2026 Porter Operations LLC</span>
-    </div>
-    <ul class="footer-links">
-      <li><a href="terms-of-service.html">Terms</a></li>
-      <li><a href="privacy-policy.html">Privacy</a></li>
-      <li><a href="mailto:support@buildwithporter.com">Contact</a></li>
-    </ul>
-  </div>
+  <span class="footer-copy">&copy; 2026 Porter Operations LLC</span>
+  <ul class="footer-links">
+    <li><a href="terms-of-service.html">Terms</a></li>
+    <li><a href="privacy-policy.html">Privacy</a></li>
+    <li><a href="mailto:support@buildwithporter.com">Contact</a></li>
+  </ul>
 </footer>
 
-<!-- ── LIGHTBOX OVERLAY ── -->
-<div class="lightbox-overlay" id="lightbox">
-  <button class="lightbox-close" aria-label="Close">&times;</button>
-  <img src="" alt="">
-</div>
-
 <script>
-(function() {
-  const overlay = document.getElementById('lightbox');
-  const overlayImg = overlay.querySelector('img');
-  const closeBtn = overlay.querySelector('.lightbox-close');
-
-  // Make all product screenshots clickable
-  document.querySelectorAll('.product-shot-inner, .showcase-img').forEach(function(container) {
-    container.classList.add('lightbox-trigger');
-    // Add "Click to zoom" hint
-    var hint = document.createElement('span');
-    hint.className = 'lightbox-hint';
-    hint.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg> Click to zoom';
-    container.style.position = 'relative';
-    container.appendChild(hint);
-
-    container.addEventListener('click', function() {
-      var img = container.querySelector('img');
-      if (img) {
-        overlayImg.src = img.src;
-        overlayImg.alt = img.alt;
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
+(function(){
+  /* ── Scroll animation (IntersectionObserver) ── */
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        var delay = parseInt(e.target.dataset.delay)||0;
+        setTimeout(function(){ e.target.classList.add('visible'); }, delay);
       }
     });
-  });
+  },{threshold:0.08});
+  document.querySelectorAll('.anim-target').forEach(function(el){ observer.observe(el); });
 
-  function closeLightbox() {
-    overlay.classList.remove('active');
-    document.body.style.overflow = '';
+  /* ── Helpers ── */
+  function toolChip(name){
+    return '<div class="tool-chip"><div class="tool-chip-icon">&#9674;</div><span class="tool-chip-name">'+name+'</span><svg class="tool-chip-check" width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M3 7L6 10L11 4" stroke="#2D6A4F" stroke-width="1.5" stroke-linecap="round"/></svg></div>';
+  }
+  function aiAvatar(){
+    return '<div class="ai-avatar-row"><div class="ai-avatar">P</div><span class="ai-label">Porter AI</span></div>';
+  }
+  function aiBlockStart(){ return '<div class="ai-block">'+aiAvatar(); }
+  function aiBlockEnd(){ return '</div>'; }
+
+  function taskRow(name,status,done,ai){
+    var checkClass = done?'done':'undone';
+    var checkIcon = done?'<svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>':'';
+    var nameClass = done?'task-name done':'task-name';
+    var badgeClass = done?'badge badge-posted':status==='Not Started'?'badge badge-gray':'badge badge-amber';
+    var aiTag = (ai&&!done)?'<span class="task-ai-tag">Porter can do this</span>':'';
+    return '<div class="task-row"><div class="task-check '+checkClass+'">'+checkIcon+'</div><span class="'+nameClass+'">'+name+'</span><span class="'+badgeClass+'">'+status+'</span>'+aiTag+'</div>';
   }
 
-  overlay.addEventListener('click', function(e) {
-    if (e.target === overlay || e.target === closeBtn) closeLightbox();
-  });
-  closeBtn.addEventListener('click', closeLightbox);
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeLightbox();
-  });
+  /* ── Demo: AI-Powered Close ── */
+  function initCloseDemo(el){
+    var chat = el.querySelector('#close-chat');
+    if(!chat) return;
+    var steps = [
+      {t:200, html:'<div class="user-bubble">Where are we with Greenfield\'s February close? What\'s left?</div>'},
+      {t:600, html:aiBlockStart()+
+        '<div class="tool-chips">'+toolChip('get_close_summary')+toolChip('list_close_tasks')+'</div>'+
+        '<div class="ai-response"><strong>February 2026:</strong> 13 of 91 tasks complete (14%).<br><br>Phase 1 — Data Collection: <strong>Done</strong> (4 complete, 1 skipped)<br>Phase 2 — Transactions: <strong>In progress</strong> (4/8)</div>'+
+      aiBlockEnd()},
+      {t:1600, html:aiBlockStart()+
+        '<div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:4px">Outstanding tasks:</div>'+
+        '<div style="display:flex;flex-direction:column;gap:4px">'+
+        taskRow('Categorize bank transactions','Complete',true,true)+
+        taskRow('Categorize credit card transactions','Complete',true,true)+
+        taskRow('Review & approve pending transactions','Not Started',false,false)+
+        taskRow('Post revenue recognition entries','Not Started',false,true)+
+        taskRow('Run bank reconciliation','Not Started',false,true)+
+        taskRow('Generate financial report','Not Started',false,true)+
+      '</div>'+aiBlockEnd()},
+      {t:2600, html:aiBlockStart()+'<div class="ai-cta">I can handle 4 of the 6 outstanding tasks right now. Want me to start with revenue recognition entries?</div>'+aiBlockEnd()}
+    ];
+    runSteps(chat, steps, el);
+  }
+
+  /* ── Demo: Smart Categorization ── */
+  function initCatDemo(el){
+    var chat = el.querySelector('#cat-chat');
+    if(!chat) return;
+    var txns = [
+      {desc:'AWS Monthly',amt:'-$2,847.32',acct:'Cloud Infrastructure',rule:'Rule: AWS*'},
+      {desc:'Gusto Payroll',amt:'-$34,521.00',acct:'Salaries & Wages',rule:'Rule: Gusto*'},
+      {desc:'Stripe Deposit',amt:'$12,450.00',acct:'Revenue',rule:'Rule: Stripe*'},
+      {desc:'WeWork Office',amt:'-$4,200.00',acct:'Rent Expense',rule:'Rule: WeWork*'},
+      {desc:'Unknown Transfer',amt:'$8,100.00',acct:'—',rule:'No rule matched'}
+    ];
+    var tableRows = txns.map(function(t){
+      var amtColor = t.amt.startsWith('-')?'var(--black)':'var(--green)';
+      var acctColor = t.acct==='—'?'var(--amber)':'var(--black)';
+      var ruleColor = t.rule.includes('No')?'var(--amber)':'var(--muted)';
+      var bg = t.acct==='—'?'background:rgba(146,64,14,0.04)':'';
+      return '<div class="data-table-row" style="grid-template-columns:auto 85px 120px 100px;'+bg+'"><span style="font-size:11px;color:var(--black)">'+t.desc+'</span><span class="f-mono" style="font-size:11px;color:'+amtColor+'">'+t.amt+'</span><span style="font-size:11px;color:'+acctColor+'">'+t.acct+'</span><span style="font-size:10px;color:'+ruleColor+'">'+t.rule+'</span></div>';
+    }).join('');
+
+    var steps = [
+      {t:200, html:'<div class="user-bubble">Categorize the 5 uncategorized bank transactions for February and post the ones you\'re confident about.</div>'},
+      {t:500, html:aiBlockStart()+
+        '<div class="tool-chips">'+toolChip('list_bank_transactions')+toolChip('list_rules')+toolChip('bulk_categorize_bank_transactions')+'</div>'+
+        '<div class="ai-response">Matched <strong>4 of 5</strong> transactions using your bank feed rules:</div>'+
+        '<div class="data-table"><div class="data-table-head" style="grid-template-columns:auto 85px 120px 100px"><span>DESCRIPTION</span><span>AMOUNT</span><span>GL ACCOUNT</span><span>MATCH</span></div>'+tableRows+'</div>'+
+      aiBlockEnd()},
+      {t:1800, html:aiBlockStart()+
+        '<div class="tool-chips">'+toolChip('approve_bank_transaction × 4')+'</div>'+
+        '<div class="ai-cta">Done — 4 transactions categorized and approved. The $8,100 transfer needs your input. Could be a customer payment or inter-account transfer. How should I categorize it?</div>'+
+      aiBlockEnd()}
+    ];
+    runSteps(chat, steps, el);
+  }
+
+  /* ── Demo: Reconciliation ── */
+  function initReconDemo(el){
+    var chat = el.querySelector('#recon-chat');
+    if(!chat) return;
+    var steps = [
+      {t:200, html:'<div class="user-bubble">Run the bank reconciliation for Chase checking. Flag any discrepancies.</div>'},
+      {t:500, html:aiBlockStart()+
+        '<div class="tool-chips">'+toolChip('get_trial_balance')+toolChip('compare_to_qbo')+toolChip('list_bank_transactions')+'</div>'+
+        '<div class="ai-response">Found <strong>1 variance</strong> on Chase checking (1000-00):</div>'+
+        '<div class="data-table"><div class="data-table-head" style="grid-template-columns:auto 110px 110px"><span></span><span style="text-align:right">BANK BALANCE</span><span style="text-align:right">QBO BALANCE</span></div>'+
+        '<div class="data-table-row" style="grid-template-columns:auto 110px 110px"><span style="font-size:11px">Chase Checking (1000-00)</span><span class="f-mono" style="font-size:11px;text-align:right">$142,847.33</span><span class="f-mono" style="font-size:11px;text-align:right">$141,597.33</span></div>'+
+        '<div class="data-table-row variance-row-red" style="grid-template-columns:auto 110px 110px;border-bottom:none"><span style="font-size:11px;font-weight:600">Variance</span><span></span><span class="f-mono" style="font-size:11px;color:var(--red);font-weight:600;text-align:right">$1,250.00</span></div></div>'+
+        '<div class="ai-response" style="margin-top:10px">Traced to a <strong>$1,250.00 deposit on 02/24</strong> in the bank feed that hasn\'t been posted to QBO. Description: "Wire — Summit Partners." Looks like a customer payment that wasn\'t recorded.</div>'+
+      aiBlockEnd()},
+      {t:2000, html:aiBlockStart()+'<div class="ai-cta">Want me to match this to an open Summit Partners invoice and post it? That would clear the variance.</div>'+aiBlockEnd()}
+    ];
+    runSteps(chat, steps, el);
+  }
+
+  /* ── Demo: Ask Anything ── */
+  function initAskDemo(el){
+    var chat = el.querySelector('#ask-chat');
+    if(!chat) return;
+    var invoices = [
+      {inv:'2041',rem:'$954.75',due:'Nov 27, 2025',days:'103'},
+      {inv:'2058',rem:'$629.10',due:'Nov 28, 2025',days:'102'},
+      {inv:'2063',rem:'$477.50',due:'Nov 29, 2025',days:'101'},
+      {inv:'2055',rem:'$414.72',due:'Nov 26, 2025',days:'104'},
+      {inv:'2037',rem:'$375.00',due:'Nov 27, 2025',days:'103'}
+    ];
+    var invRows = invoices.map(function(inv){
+      return '<div class="data-table-row" style="grid-template-columns:70px 90px 120px 100px"><span style="font-size:11px;text-align:center">'+inv.inv+'</span><span class="f-mono" style="font-size:11px;font-weight:500">'+inv.rem+'</span><span style="font-size:11px;color:var(--text2)">'+inv.due+'</span><span class="f-mono" style="font-size:11px;color:var(--red);text-align:right">'+inv.days+'</span></div>';
+    }).join('');
+
+    var steps = [
+      {t:200, html:'<div class="user-bubble">Do I have any outstanding receivables? Anything overdue?</div>'},
+      {t:600, html:aiBlockStart()+
+        '<div class="tool-chips">'+toolChip('get_ar_balance_report')+toolChip('submit_feedback')+'</div>'+
+        '<div class="ai-response">Yes — as of <strong>Mar 10, 2026</strong> you have <strong>$4,588.52</strong> in outstanding A/R, and it\'s <strong>all 90+ days past due</strong>.<br><br>Here are the <strong>largest open invoices</strong>:</div>'+
+      aiBlockEnd()},
+      {t:1600, html:aiBlockStart()+
+        '<div class="data-table"><div class="data-table-head" style="grid-template-columns:70px 90px 120px 100px"><span>INVOICE</span><span>REMAINING</span><span>DUE DATE</span><span>DAYS PAST DUE</span></div>'+invRows+'</div>'+
+        '<div class="ai-response">I can pull the full list (<strong>17</strong> open invoices) and help you prioritize follow-ups or decide what to write off.</div>'+
+      aiBlockEnd()}
+    ];
+    runSteps(chat, steps, el);
+  }
+
+  /* ── Step runner ── */
+  function runSteps(chat, steps, section){
+    var started = false;
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting && !started){
+          started = true;
+          steps.forEach(function(s){
+            setTimeout(function(){
+              var div = document.createElement('div');
+              div.innerHTML = s.html;
+              div.style.animation = 'fadeIn 0.25s ease both';
+              chat.appendChild(div);
+              chat.scrollTop = chat.scrollHeight;
+            }, s.t);
+          });
+        }
+      });
+    },{threshold:0.12});
+    obs.observe(section);
+  }
+
+  /* ── Dashboard chart ── */
+  function initDashboard(el){
+    var chartBars = el.querySelector('#chart-bars');
+    var arBars = el.querySelector('#ar-bars');
+    if(!chartBars) return;
+    var months = ['Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'];
+    var rv = [35,80,55,30,20,25,40,65,90,85,95,100];
+    var ex = [20,30,25,20,15,18,22,25,30,28,32,35];
+    months.forEach(function(m,i){
+      var col = document.createElement('div');
+      col.style.cssText = 'flex:1;display:flex;flex-direction:column;align-items:center;gap:2px';
+      col.innerHTML = '<div style="display:flex;gap:2px;align-items:flex-end;height:130px">'+
+        '<div class="dash-chart-bar" style="width:13px;background:var(--green);height:0" data-h="'+(rv[i]/100*130)+'" data-d="'+(50+i*30)+'"></div>'+
+        '<div class="dash-chart-bar" style="width:13px;background:#E5E5E5;height:0" data-h="'+(ex[i]/100*130)+'" data-d="'+(80+i*30)+'"></div>'+
+      '</div><span style="font-size:9px;color:var(--muted);margin-top:5px">'+m+'</span>';
+      chartBars.appendChild(col);
+    });
+
+    var arData = [{p:48,c:'var(--green)'},{p:22,c:'var(--black)'},{p:10,c:'#6B7280'},{p:13,c:'var(--amber)'},{p:7,c:'var(--red)'}];
+    arData.forEach(function(a,i){
+      var bar = document.createElement('div');
+      bar.className = 'ar-bar';
+      bar.style.cssText = 'background:'+a.c+';width:0';
+      bar.dataset.w = a.p+'%';
+      bar.dataset.d = 100+i*50;
+      arBars.appendChild(bar);
+    });
+
+    var started = false;
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting && !started){
+          started = true;
+          setTimeout(function(){
+            chartBars.querySelectorAll('.dash-chart-bar').forEach(function(b){
+              setTimeout(function(){ b.style.height = b.dataset.h+'px'; }, parseInt(b.dataset.d));
+            });
+            arBars.querySelectorAll('.ar-bar').forEach(function(b){
+              setTimeout(function(){ b.style.width = b.dataset.w; }, parseInt(b.dataset.d));
+            });
+          },400);
+        }
+      });
+    },{threshold:0.12});
+    obs.observe(el);
+  }
+
+  /* ── Transactions screen ── */
+  function initTxns(el){
+    var container = el.querySelector('#txn-rows');
+    if(!container) return;
+    var rows = [
+      {date:'02/27/2026',desc:'ACH Deposit — Billing Cle...',amt:'$644.01',acct:'Clearing Account',status:'Ready',sVar:'amber'},
+      {date:'02/27/2026',desc:'ACH via Bill.com — vendor...',amt:'$1,000.00',acct:'Accounts Receivable',status:'Posted',sVar:'posted'},
+      {date:'02/27/2026',desc:'Wire Transfer — Client Pa...',amt:'$22,000.00',acct:'Accounts Receivable',status:'Posted',sVar:'posted'},
+      {date:'02/27/2026',desc:'Utility Payment — Electric...',amt:'-$767.37',acct:'Utilities Expense',status:'Approved',sVar:'green'},
+      {date:'02/27/2026',desc:'Wire from Storage Co — n...',amt:'$22,000.00',acct:'Accounts Receivable',status:'Posted',sVar:'posted'},
+      {date:'02/27/2026',desc:'Interest Payment — Chec...',amt:'$0.01',acct:'Bank Interest Income',status:'Approved',sVar:'green'},
+      {date:'02/27/2026',desc:'Payroll Deduction — Ben...',amt:'-$630.86',acct:'Benefits Expense',status:'Posted',sVar:'posted'}
+    ];
+    rows.forEach(function(r,i){
+      var amtColor = r.amt.startsWith('-')?'var(--black)':'var(--green)';
+      var badgeClass = 'badge badge-'+r.sVar;
+      var div = document.createElement('div');
+      div.style.cssText = 'display:grid;grid-template-columns:76px minmax(0,1fr) 95px minmax(0,1fr) 80px;padding:7px 10px;align-items:center;border-bottom:1px solid var(--border-sub);opacity:0;transform:translateX(-10px);transition:all 0.4s cubic-bezier(0.16,1,0.3,1)';
+      div.innerHTML = '<span style="font-size:10.5px;color:var(--text2)">'+r.date+'</span>'+
+        '<span style="font-size:10.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+r.desc+'</span>'+
+        '<span class="f-mono" style="font-size:10.5px;color:'+amtColor+';font-weight:500">'+r.amt+'</span>'+
+        '<span style="font-size:10.5px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+r.acct+'</span>'+
+        '<span class="'+badgeClass+'">'+r.status+'</span>';
+      container.appendChild(div);
+    });
+
+    var started = false;
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting && !started){
+          started = true;
+          container.querySelectorAll('div').forEach(function(row,i){
+            setTimeout(function(){ row.style.opacity='1'; row.style.transform='translateX(0)'; }, 150+i*60);
+          });
+        }
+      });
+    },{threshold:0.12});
+    obs.observe(el);
+  }
+
+  /* ── Monthly Close screen ── */
+  function initMonthly(el){
+    var content = el.querySelector('#monthly-content');
+    if(!content) return;
+    content.innerHTML = '<div style="height:100%;display:flex;flex-direction:column;overflow:hidden">'+
+      '<div style="padding:14px 20px;display:flex;align-items:center;gap:10px">'+
+        '<span class="f-serif" style="font-size:26px">February 2026</span>'+
+        '<span class="badge badge-amber">In Progress</span>'+
+        '<div style="flex:1"></div><div style="padding:7px 14px;border-radius:6px;background:var(--black)"><span style="font-size:11px;color:#fff;font-weight:500">Submit for Review</span></div>'+
+      '</div>'+
+      '<div style="padding:0 20px 12px"><div class="close-progress-bar"><div class="close-progress-fill" id="close-fill" style="width:0"></div></div><span style="font-size:10.5px;color:var(--muted);margin-top:3px;display:block" id="close-count">0/91 complete</span></div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:0 20px 12px" id="close-stats">'+
+        '<div class="close-stat-card"><div class="close-stat-label">CHECKLIST</div><div class="close-stat-val">9/73 tasks</div><div class="close-stat-sub" style="color:var(--green)">All on track</div></div>'+
+        '<div class="close-stat-card"><div class="close-stat-label">JOURNAL ENTRIES</div><div class="close-stat-val">35 entries</div><div class="close-stat-sub" style="color:var(--muted)">$1,878,119 total debits</div></div>'+
+        '<div class="close-stat-card"><div class="close-stat-label">RECONCILIATIONS</div><div class="close-stat-val">4/18 accounts</div><div class="close-stat-sub" style="color:var(--amber)">2 variances</div></div>'+
+      '</div>'+
+      '<div style="flex:1;overflow:hidden;padding:0 20px" id="close-tasks">'+
+        '<div style="display:flex;align-items:center;gap:7px;padding:8px 0;border-bottom:1px solid var(--border-sub)">'+
+          '<span style="font-size:9px;color:var(--muted)">›</span>'+
+          '<div style="width:20px;height:20px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center"><span style="font-size:10.5px;color:#fff;font-weight:600">1</span></div>'+
+          '<span style="font-size:12.5px;font-weight:500">Pre-Close</span>'+
+          '<svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 7L6 10L11 4" stroke="#2D6A4F" stroke-width="1.5" stroke-linecap="round"/></svg>'+
+          '<div style="flex:1"></div><span style="font-size:10.5px;color:var(--muted)">5/5</span>'+
+        '</div>'+
+        '<div>'+
+          '<div style="display:flex;align-items:center;gap:7px;padding:8px 0">'+
+            '<span style="font-size:9px;color:var(--muted)">⌄</span>'+
+            '<div style="width:20px;height:20px;border-radius:50%;background:var(--green-bg);display:flex;align-items:center;justify-content:center"><span style="font-size:10.5px;color:var(--green);font-weight:600">2</span></div>'+
+            '<span style="font-size:12.5px;font-weight:500">Transactions</span>'+
+            '<div style="flex:1"></div><span style="font-size:10.5px;color:var(--muted)">4/8</span>'+
+          '</div>'+
+          '<div id="close-task-rows"></div>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+
+    var tasks = [
+      {name:'Upload bank transactions',cat:'Upload',status:'In Progress',done:false},
+      {name:'Upload credit card transactions',cat:'Upload',status:'In Progress',done:false},
+      {name:'Import vendor bills',cat:'Upload',status:'Skipped',done:false},
+      {name:'Import customer payments',cat:'Upload',status:'Complete',done:true},
+      {name:'Categorize bank transactions',cat:'Review',status:'Complete',done:true},
+      {name:'Categorize credit card transactions',cat:'Review',status:'Complete',done:true},
+      {name:'Review & approve pending',cat:'Review',status:'Not Started',done:false}
+    ];
+    var taskContainer = content.querySelector('#close-task-rows');
+    tasks.forEach(function(t){
+      var checkClass = t.done?'done':'undone';
+      var checkIcon = t.done?'<svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M2 5L4 7L8 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>':'';
+      var statusClass = t.status==='Complete'?'badge-posted':t.status==='In Progress'?'badge-amber':'badge-gray';
+      var div = document.createElement('div');
+      div.style.cssText = 'display:grid;grid-template-columns:22px auto 1fr auto auto;gap:6px;padding:6px 0 6px 28px;align-items:center;border-bottom:1px solid var(--border-sub);opacity:0;transition:opacity 0.3s ease';
+      div.innerHTML = '<div class="task-check '+checkClass+'">'+checkIcon+'</div>'+
+        '<span style="font-size:10.5px;white-space:nowrap">'+t.name+'</span>'+
+        '<span></span>'+
+        '<span class="badge badge-gray">'+t.cat+'</span>'+
+        '<span class="badge '+statusClass+'">'+t.status+'</span>';
+      taskContainer.appendChild(div);
+    });
+
+    var started = false;
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting && !started){
+          started = true;
+          // Animate progress bar
+          var count = 0;
+          var fill = content.querySelector('#close-fill');
+          var countEl = content.querySelector('#close-count');
+          var interval = setInterval(function(){
+            count++;
+            if(count>=13){ clearInterval(interval); }
+            fill.style.width = (count/91*100)+'%';
+            countEl.textContent = count+'/91 complete';
+          },80);
+          // Animate task rows
+          taskContainer.querySelectorAll('div').forEach(function(row,i){
+            setTimeout(function(){ row.style.opacity='1'; }, 800+i*40);
+          });
+        }
+      });
+    },{threshold:0.12});
+    obs.observe(el);
+  }
+
+  /* ── Schedules screen ── */
+  function initSchedules(el){
+    var content = el.querySelector('#schedules-content');
+    if(!content) return;
+    var months = ['JUL 2025','AUG 2025','SEP 2025','OCT 2025','NOV 2025','DEC 2025'];
+    var custs = [
+      {n:'Baxter Industrial',v:['$1,528.77','$1,528.77','$1,479.45','$1,528.77','$1,528.77','$1,380.82']},
+      {n:'Cornerstone Group',v:['$2,038.36','$2,038.36','$1,972.60','$2,038.36','$2,038.36','$1,841.10']},
+      {n:'Northfield Capital',v:['–','–','$19.73','$591.78','$611.51','$552.33']},
+      {n:'Summit Partners',v:['$3,397.26','$3,397.26','$3,287.68','–','–','–']},
+      {n:'Ridgemont Solutions',v:['$21.86','$677.75','$655.89','–','–','–']},
+      {n:'Clearwater Advisors',v:['–','–','–','$49.32','$509.59','$460.27']}
+    ];
+    var totals = [
+      {l:'Beginning Balance',v:['857,236','$1,041,616','$1,241,553','$1,440,334','$1,660,789','$1,892,631']},
+      {l:'Net Activity',v:['184,380','$199,937','$198,781','$220,455','$231,842','$252,777']},
+      {l:'Ending Balance',v:['$1,041,616','$1,241,553','$1,440,334','$1,660,789','$1,892,631','$2,145,408']}
+    ];
+
+    var monthHeaders = months.map(function(m){ return '<span style="font-size:9px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.03em;text-align:right">'+m+'</span>'; }).join('');
+    var custRows = custs.map(function(c){
+      var vals = c.v.map(function(v){ return '<span class="f-mono" style="font-size:10.5px;color:'+(v==='–'?'var(--muted)':'var(--black)')+';text-align:right">'+v+'</span>'; }).join('');
+      return '<div style="display:grid;grid-template-columns:140px repeat(6,1fr);padding:7px 10px;border-bottom:1px solid var(--border-sub);opacity:0;transition:opacity 0.35s ease" class="sched-row"><span style="font-size:10.5px">'+c.n+'</span>'+vals+'</div>';
+    }).join('');
+    var totalRows = totals.map(function(r,ri){
+      var vals = r.v.map(function(v){ return '<span class="f-mono" style="font-size:10.5px;font-weight:500;text-align:right">'+v+'</span>'; }).join('');
+      var bg = ri===2?'background:var(--tint)':'';
+      var bb = ri<2?'border-bottom:1px solid var(--border-sub)':'';
+      return '<div style="display:grid;grid-template-columns:140px repeat(6,1fr);padding:7px 10px;'+bg+';'+bb+'"><span style="font-size:10.5px;font-weight:600">'+r.l+'</span>'+vals+'</div>';
+    }).join('');
+
+    content.innerHTML = '<div style="height:100%;display:flex;flex-direction:column">'+
+      '<div class="app-tabs"><span class="app-tab">Source Data</span><span class="app-tab active">Activity</span></div>'+
+      '<div class="app-sub-tabs"><span class="app-sub-tab active">Rev Rec</span><span class="app-sub-tab">Deferred Revenue</span><span class="app-sub-tab">Unbilled</span><span class="app-sub-tab">Prepaid Expenses</span><span class="app-sub-tab">Fixed Assets</span></div>'+
+      '<div style="display:grid;grid-template-columns:140px repeat(6,1fr);padding:0 10px;height:28px;align-items:center;background:var(--tint);border-bottom:1px solid var(--border-sub)"><span style="font-size:9.5px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em">CUSTOMER</span>'+monthHeaders+'</div>'+
+      '<div style="flex:1;overflow:hidden" id="sched-body">'+custRows+
+        '<div style="border-top:2px solid var(--border);opacity:0;transition:opacity 0.5s ease 0.4s" class="sched-totals">'+totalRows+'</div>'+
+      '</div></div>';
+
+    var started = false;
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting && !started){
+          started = true;
+          content.querySelectorAll('.sched-row').forEach(function(row,i){
+            setTimeout(function(){ row.style.opacity='1'; }, 300+i*40);
+          });
+          setTimeout(function(){
+            var t = content.querySelector('.sched-totals');
+            if(t) t.style.opacity='1';
+          }, 600);
+        }
+      });
+    },{threshold:0.12});
+    obs.observe(el);
+  }
+
+  /* ── INIT ALL ── */
+  initCloseDemo(document.getElementById('demo-close'));
+  initCatDemo(document.getElementById('demo-cat'));
+  initReconDemo(document.getElementById('demo-recon'));
+  initAskDemo(document.getElementById('demo-ask'));
+  initDashboard(document.getElementById('demo-dashboard'));
+  initTxns(document.getElementById('demo-txns'));
+  initMonthly(document.getElementById('demo-monthly'));
+  initSchedules(document.getElementById('demo-schedules'));
 })();
 </script>
 
